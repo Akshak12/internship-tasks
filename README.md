@@ -1,6 +1,6 @@
 # Internship Tasks
 
-This repository contains all my weekly assignments from my data science internship.
+This repository contains all my weekly assignments from my data engineering internship.
 
 # Weekly Progress
 | Week | Topic 
