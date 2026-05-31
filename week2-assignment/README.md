@@ -22,7 +22,7 @@ Analyze sales data using SQL with filtering, aggregation, and business queries.
 **Files**
 | File | Description |
 |------|-------------|
-| `SQL_Sales_Analysis_Week2.docx` | Full report with SQL queries, output screenshots and insights |
+| `Week 2 Internship Assignment.docx` | Full report with SQL queries, output screenshots and insights |
 
 **Key Findings**
 - West region leads in total sales across all four regions
