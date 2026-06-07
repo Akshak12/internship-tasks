@@ -7,7 +7,7 @@ Analyze sales data using SQL by applying Subqueries, CTEs, and Window Functions 
 
 # Dataset
 
-- **Source:** Kaggle — Superstore Sales Dataset
+- **Source:** Kaggle — Superstore Dataset
 - **Records:** 9,994 rows
 - **Tool Used:** MySQL Workbench
 
