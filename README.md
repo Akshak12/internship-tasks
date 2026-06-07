@@ -5,8 +5,8 @@ This repository contains all my weekly assignments from my internship.
 | Week | Topic |
 |------|-------|
 | Week 1 | Python & Pandas Basics |
-| Week 2 | SQL Sales Data Analysis |
-
+| Week 2 | SQL Basics |
+| Week 3 | Advanced SQL |
 # Repository Structure
 Each week has its own folder containing the work done that week.
 The structure may vary depending on the task, some weeks include
