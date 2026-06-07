@@ -17,7 +17,7 @@ Analyze sales data using SQL by applying Subqueries, CTEs, and Window Functions 
 | Step | Description |
 |------|-------------|
 | 1 | Loaded the dataset into a MySQL database |
-| 2 | Created dimensional tables — customers, orders, products |
+| 2 | Created dimensional tables: customers, orders, products |
 | 3 | Applied Subqueries (above average sales, highest order per customer) |
 | 4 | Used CTEs for aggregations (total sales, total profit per customer) |
 | 5 | Applied Window Functions (ROW_NUMBER, RANK, DENSE_RANK) |
