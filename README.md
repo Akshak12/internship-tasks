@@ -21,3 +21,4 @@ This repository contains all the assignments, projects, and learning activities 
 ├── week4-assignment/
 └── README.md
 ```
+Each week has its own folder containing the work done that week. The structure may vary depending on the task.
