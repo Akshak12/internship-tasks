@@ -1,17 +1,23 @@
 # Internship Tasks
 
-This repository contains all my weekly assignments from my internship.
+This repository contains all the assignments, projects, and learning activities completed during my internship. Each week focuses on different technologies, concepts, and hands-on exercises aimed at building practical skills.
 
-# Weekly Progress
+## Weekly Progress
 
-| Week   | Topic|
-| ------ | ----------------------|
-| Week 1 | Python & Pandas Basics|
-| Week 2 | SQL Basics |
-| Week 3 | Advanced SQL |
+| Week   | Topic                                    |
+| ------ | ---------------------------------------- |
+| Week 1 | Python & Pandas Basics                   |
+| Week 2 | SQL Basics                               |
+| Week 3 | Advanced SQL                             |
+| Week 4 | Azure Cloud and ADF |
 
 # Repository Structure
 
-Each week has its own folder containing the work done that week.
-The structure may vary depending on the task, some weeks include
-Jupyter notebooks and datasets, others include SQL scripts and reports.
+```text
+.
+├── week1-assignment/
+├── week2-assignment/
+├── week3-assignment/
+├── week4-assignment/
+└── README.md
+```
