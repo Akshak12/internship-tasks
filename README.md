@@ -9,7 +9,8 @@ This repository contains all the assignments, projects, and learning activities 
 | Week 1 | Python & Pandas Basics                   |
 | Week 2 | SQL Basics                               |
 | Week 3 | Advanced SQL                             |
-| Week 4 | Azure Cloud and ADF |
+| Week 4 | Azure Cloud and ADF                      |
+| Week 5 | Apache Spark Basics                      |
 
 # Repository Structure
 
@@ -19,6 +20,7 @@ This repository contains all the assignments, projects, and learning activities 
 ├── week2-assignment/
 ├── week3-assignment/
 ├── week4-assignment/
+├── week-5 assignment/
 └── README.md
 ```
 Each week has its own folder containing the work done that week. The structure may vary depending on the task.
