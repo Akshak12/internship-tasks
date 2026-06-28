@@ -10,10 +10,10 @@ This repository contains all the assignments, projects, and learning activities 
 | Week 2 | SQL Basics                               |
 | Week 3 | Advanced SQL                             |
 | Week 4 | Azure Cloud and ADF                      |
-| Week 5 | Apache Spark Basics                      |
+| Week 5 | Data Cleaning                            |
+| Week 6 | Spark Intro                              |
 
 # Repository Structure
-
 ```text
 .
 ├── week1-assignment/
@@ -21,6 +21,7 @@ This repository contains all the assignments, projects, and learning activities 
 ├── week3-assignment/
 ├── week4-assignment/
 ├── week-5 assignment/
+├── week6-assignment/
 └── README.md
 ```
 Each week has its own folder containing the work done that week. The structure may vary depending on the task.
