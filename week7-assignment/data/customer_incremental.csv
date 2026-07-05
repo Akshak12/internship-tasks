@@ -1,0 +1,7 @@
+customer_id,name,email,city,status,updated_at
+1,Ravi Sharma,ravi.sharma@example.com,Udaipur,active,2026-02-01
+3,Suresh Kumar,suresh.kumar@example.com,Mumbai,inactive,2026-02-01
+6,Neha Gupta,neha.gupta.new@example.com,Delhi,active,2026-02-02
+11,Meera Iyer,meera.iyer@example.com,Chennai,active,2026-02-02
+12,Arjun Nair,arjun.nair@example.com,Kochi,active,2026-02-03
+8,Kiran Rao,kiran.rao@example.com,Hyderabad,active,2026-02-03

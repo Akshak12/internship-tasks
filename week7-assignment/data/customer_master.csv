@@ -1,0 +1,13 @@
+customer_id,name,email,city,status,updated_at
+1,Ravi Sharma,ravi.sharma@example.com,Jaipur,active,2026-01-01
+2,Anjali Verma,anjali.verma@example.com,Delhi,active,2026-01-01
+3,Suresh Kumar,suresh.kumar@example.com,Mumbai,active,2026-01-01
+4,Priya Singh,priya.singh@example.com,Bangalore,active,2026-01-01
+5,Amit Joshi,amit.joshi@example.com,Pune,active,2026-01-01
+6,Neha Gupta,neha.gupta@example.com,Delhi,active,2026-01-01
+7,Rahul Mehta,rahul.mehta@example.com,Chennai,active,2026-01-01
+8,Kiran Rao,kiran.rao@example.com,Hyderabad,active,2026-01-01
+9,Deepak Nair,deepak.nair@example.com,Kochi,active,2026-01-01
+10,Deepak Nair,deepak.nair@example.com,Kochi,active,2026-01-01
+2,Anjali Verma,anjali.verma@example.com,Delhi,active,2026-01-01
+11,Sanjay Patel,,Ahmedabad,active,2026-01-01
