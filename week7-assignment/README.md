@@ -1,4 +1,4 @@
-# Delta Lake Assignment — Incremental Load & SCD using MERGE
+# Delta Lake Assignment
 
 A Delta Lake + PySpark pipeline that loads customer data, cleans it, and applies incremental updates using `MERGE` implemented two ways: SCD Type 1 (overwrite) and SCD Type 2 (full history).
 
