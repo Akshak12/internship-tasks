@@ -1,73 +1,130 @@
--- Advanced SQL Analytics - Window Functions & CTEs
+-- Intermediate & Advanced SQL Analytics - Window Functions & CTEs
 
--- 1. Rank customers by lifetime value (LTV) using RANK() and DENSE_RANK()
-WITH customer_ltv AS (
+-- 4. Find customers who placed orders but never had any item delivered
+SELECT 
+    c.customer_id, 
+    c.customer_name
+FROM customers c
+WHERE c.customer_id IN (SELECT DISTINCT customer_id FROM orders) -- Placed at least one order
+  AND c.customer_id NOT IN (SELECT DISTINCT customer_id FROM orders WHERE status = 'DELIVERED');
+
+-- 5. Products that were ordered but had more returns than purchases
+-- Returns are negative quantities, purchases are positive quantities
+WITH product_qtys AS (
     SELECT 
-        c.customer_id,
-        c.name AS customer_name,
-        c.city,
-        ROUND(SUM(o.order_total), 2) AS lifetime_value,
-        COUNT(o.order_id) AS order_count
-    FROM customers c
-    JOIN orders o ON c.customer_id = o.customer_id
-    WHERE o.status != 'cancelled'
-    GROUP BY c.customer_id, c.name, c.city
+        p.product_id, 
+        p.product_name,
+        SUM(CASE WHEN oi.quantity > 0 THEN oi.quantity ELSE 0 END) AS total_purchased,
+        SUM(CASE WHEN oi.quantity < 0 THEN ABS(oi.quantity) ELSE 0 END) AS total_returned
+    FROM order_items oi
+    JOIN products p ON oi.product_id = p.product_id
+    GROUP BY p.product_id, p.product_name
 )
 SELECT 
-    customer_id,
-    customer_name,
-    city,
-    order_count,
-    lifetime_value,
-    RANK() OVER (ORDER BY lifetime_value DESC) AS ltv_rank,
-    DENSE_RANK() OVER (ORDER BY lifetime_value DESC) AS ltv_dense_rank
-FROM customer_ltv
-ORDER BY lifetime_value DESC
-LIMIT 15;
+    product_id, 
+    product_name, 
+    total_purchased, 
+    total_returned
+FROM product_qtys
+WHERE total_returned > total_purchased;
 
--- 2. Calculate daily running totals and 7-day moving averages for revenue
-WITH daily_sales AS (
+-- 6. Calculate the return rate (returned items / total items) per category
+SELECT 
+    p.category,
+    SUM(CASE WHEN oi.quantity > 0 THEN oi.quantity ELSE 0 END) AS total_purchased,
+    SUM(CASE WHEN oi.quantity < 0 THEN ABS(oi.quantity) ELSE 0 END) AS total_returned,
+    ROUND(
+        SUM(CASE WHEN oi.quantity < 0 THEN ABS(oi.quantity) ELSE 0 END) * 100.0 / 
+        NULLIF(SUM(CASE WHEN oi.quantity > 0 THEN oi.quantity ELSE 0 END), 0), 
+        2
+    ) || '%' AS return_rate
+FROM order_items oi
+JOIN products p ON oi.product_id = p.product_id
+GROUP BY p.category;
+
+-- 7. Running Totals with Window Functions: Calculate running total of revenue per region, ordered by date
+-- Shows: region_code, order_date, daily_revenue, running_total
+WITH daily_region_revenue AS (
     SELECT 
-        date(order_date) AS order_day,
-        SUM(order_total) AS daily_revenue
-    FROM orders
-    WHERE status != 'cancelled'
-    GROUP BY order_day
+        o.region_code,
+        DATE(o.order_date) AS order_date,
+        ROUND(SUM(oi.quantity * oi.unit_price * (1 - oi.discount_percent / 100.0)), 2) AS daily_revenue
+    FROM orders o
+    JOIN order_items oi ON o.order_id = oi.order_id
+    WHERE o.status != 'CANCELLED'
+    GROUP BY o.region_code, DATE(o.order_date)
 )
 SELECT 
-    order_day,
-    ROUND(daily_revenue, 2) AS daily_revenue,
-    ROUND(SUM(daily_revenue) OVER (ORDER BY order_day), 2) AS running_total_revenue,
-    ROUND(AVG(daily_revenue) OVER (
-        ORDER BY order_day 
-        ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
-    ), 2) AS seven_day_moving_avg
-FROM daily_sales
-ORDER BY order_day;
+    region_code,
+    order_date,
+    daily_revenue,
+    ROUND(SUM(daily_revenue) OVER (
+        PARTITION BY region_code 
+        ORDER BY order_date
+        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ), 2) AS running_total
+FROM daily_region_revenue
+ORDER BY region_code, order_date;
 
--- 3. Monthly revenue and growth rate comparison using CTEs and LAG()
-WITH monthly_revenue AS (
+-- 8. Ranking with DENSE_RANK: For each category, rank products by total revenue
+-- Shows: category, product_name, total_revenue, rank_in_category
+WITH product_revenue AS (
     SELECT 
-        strftime('%Y-%m', order_date) AS sales_month,
-        SUM(order_total) AS current_month_rev
+        p.category,
+        p.product_name,
+        ROUND(SUM(oi.quantity * oi.unit_price * (1 - oi.discount_percent / 100.0)), 2) AS total_revenue
+    FROM order_items oi
+    JOIN products p ON oi.product_id = p.product_id
+    JOIN orders o ON oi.order_id = o.order_id
+    WHERE o.status != 'CANCELLED'
+    GROUP BY p.category, p.product_name
+)
+SELECT 
+    category,
+    product_name,
+    total_revenue,
+    DENSE_RANK() OVER (PARTITION BY category ORDER BY total_revenue DESC) AS rank_in_category
+FROM product_revenue
+ORDER BY category, rank_in_category;
+
+-- 9. LAG/LEAD Analysis: For each customer, calculate days between consecutive orders
+-- Shows: customer_id, order_date, previous_order_date, days_gap
+-- Flags customers with average gap > 30 days as "At Risk"
+WITH customer_order_dates AS (
+    SELECT 
+        customer_id,
+        order_date,
+        LAG(order_date, 1) OVER (PARTITION BY customer_id ORDER BY order_date) AS previous_order_date
     FROM orders
-    WHERE status != 'cancelled'
-    GROUP BY sales_month
+    WHERE status != 'CANCELLED'
 ),
-monthly_lag AS (
+gaps AS (
     SELECT 
-        sales_month,
-        ROUND(current_month_rev, 2) AS monthly_revenue,
-        ROUND(LAG(current_month_rev, 1) OVER (ORDER BY sales_month), 2) AS previous_month_revenue
-    FROM monthly_revenue
+        customer_id,
+        order_date,
+        previous_order_date,
+        CASE 
+            WHEN previous_order_date IS NULL THEN NULL
+            ELSE ROUND(JULIANDAY(order_date) - JULIANDAY(previous_order_date), 2)
+        END AS days_gap
+    FROM customer_order_dates
+),
+customer_average_gap AS (
+    SELECT 
+        customer_id,
+        AVG(days_gap) AS avg_days_gap
+    FROM gaps
+    GROUP BY customer_id
 )
 SELECT 
-    sales_month,
-    monthly_revenue,
-    COALESCE(previous_month_revenue, 0.0) AS previous_month_revenue,
+    g.customer_id,
+    g.order_date,
+    g.previous_order_date,
+    g.days_gap,
     CASE 
-        WHEN previous_month_revenue IS NULL OR previous_month_revenue = 0 THEN 0.0
-        ELSE ROUND(((monthly_revenue - previous_month_revenue) / previous_month_revenue) * 100.0, 2)
-    END AS MoM_growth_pct
-FROM monthly_lag
-ORDER BY sales_month;
+        WHEN cag.avg_days_gap > 30 THEN 'At Risk'
+        ELSE 'Normal'
+    END AS risk_flag
+FROM gaps g
+JOIN customer_average_gap cag ON g.customer_id = cag.customer_id
+ORDER BY g.customer_id, g.order_date;

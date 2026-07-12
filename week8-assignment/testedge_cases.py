@@ -1,53 +1,79 @@
 import unittest
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
+
+# Import functions from the scripts.clean_data module
+from scripts.clean_data import clean_orders, check_referential_integrity
 
 class TestEdgeCases(unittest.TestCase):
 
     # 1. What happens when order_items has an order_id not in orders?
     def test_orphan_order_id_in_items(self):
-        orders = pd.DataFrame({'order_id': ['ORD-1', 'ORD-2']})
-        items = pd.DataFrame({
-            'item_id':  ['ITM-1', 'ITM-2', 'ITM-3'],
-            'order_id': ['ORD-1', 'ORD-999', 'ORD-2'],  # ORD-999 doesn't exist
-            'qty':      [2, 1, 3],
+        orders = pd.DataFrame({
+            'order_id': ['ORD-000001', 'ORD-000002'],
+            'customer_id': ['CUST-1001', 'CUST-1002'],
+            'order_date': ['2025-06-01 10:00:00', '2025-06-02 12:00:00'],
+            'status': ['DELIVERED', 'SHIPPED'],
+            'region_code': ['REG_NORTH', 'REG_SOUTH']
         })
-        cleaned = items[items['order_id'].isin(orders['order_id'])]
-        self.assertEqual(len(cleaned), 2)
-        self.assertNotIn('ORD-999', cleaned['order_id'].values)
+        items = pd.DataFrame({
+            'item_id':  ['ITM-000001', 'ITM-000002', 'ITM-000003'],
+            'order_id': ['ORD-000001', 'ORD-999999', 'ORD-000002'],  # ORD-999999 doesn't exist
+            'quantity': [2, 1, 3],
+        })
+        # check_referential_integrity finds orphans
+        orphans = check_referential_integrity(orders, items)
+        self.assertIn('ITM-000002', orphans)
+        
+        # Filter orphans out
+        cleaned_items = items[~items['item_id'].isin(orphans)]
+        self.assertEqual(len(cleaned_items), 2)
+        self.assertNotIn('ORD-999999', cleaned_items['order_id'].values)
 
     # 2. What happens when discount_percent > 100?
-    def test_discount_over_100_clamped_to_zero(self):
+    def test_discount_over_100_reset_to_zero(self):
         items = pd.DataFrame({
-            'item_id':  ['ITM-1', 'ITM-2', 'ITM-3'],
-            'discount': [10, 150, -5],  # 150 and -5 are invalid
+            'item_id':  ['ITM-000001', 'ITM-000002', 'ITM-000003'],
+            'discount_percent': [10.0, 150.0, -5.0],  # 150 and -5 are invalid
         })
-        items['discount'] = items['discount'].apply(lambda x: x if 0 <= x <= 100 else 0)
-        self.assertEqual(items.loc[0, 'discount'], 10)   # valid, unchanged
-        self.assertEqual(items.loc[1, 'discount'], 0)    # 150 → clamped to 0
-        self.assertEqual(items.loc[2, 'discount'], 0)    # -5  → clamped to 0
+        # Reset invalid discounts to 0.0 (simulating clean_data.py logic)
+        invalid_discount_mask = (items['discount_percent'] < 0) | (items['discount_percent'] > 100)
+        items.loc[invalid_discount_mask, 'discount_percent'] = 0.0
+        
+        self.assertEqual(items.loc[0, 'discount_percent'], 10.0)   # valid, unchanged
+        self.assertEqual(items.loc[1, 'discount_percent'], 0.0)    # 150.0 → reset to 0.0
+        self.assertEqual(items.loc[2, 'discount_percent'], 0.0)    # -5.0  → reset to 0.0
 
     # 3. What happens when quantity is 0?
     def test_zero_quantity_dropped(self):
         items = pd.DataFrame({
-            'item_id': ['ITM-1', 'ITM-2', 'ITM-3'],
-            'qty':     [0, -2, 3],  # 0 and negative are invalid
+            'item_id': ['ITM-000001', 'ITM-000002', 'ITM-000003'],
+            'quantity': [0, -2, 3],  # 0 is invalid, -2 is a return (valid)
         })
-        cleaned = items[items['qty'] > 0]
-        self.assertEqual(len(cleaned), 1)
-        self.assertEqual(cleaned['item_id'].values[0], 'ITM-3')
+        # Drop quantity == 0
+        cleaned_items = items[items['quantity'] != 0]
+        self.assertEqual(len(cleaned_items), 2)
+        self.assertNotIn('ITM-000001', cleaned_items['item_id'].values)
+        self.assertIn('ITM-000002', cleaned_items['item_id'].values) # Returns preserved
 
     # 4. What happens when order_date is in the future?
     def test_future_order_date_dropped(self):
+        now = datetime.now()
+        future_date = (now + timedelta(days=10)).strftime("%Y-%m-%d %H:%M:%S")
+        past_date = (now - timedelta(days=2)).strftime("%Y-%m-%d %H:%M:%S")
+        
         orders = pd.DataFrame({
-            'order_id':   ['ORD-1', 'ORD-2'],
-            'order_date': ['2028-12-01 10:00:00', '2024-05-15 09:00:00'],
+            'order_id': ['ORD-000001', 'ORD-000002'],
+            'customer_id': ['CUST-1001', 'CUST-1002'],
+            'order_date': [future_date, past_date],
+            'status': ['PLACED', 'DELIVERED'],
+            'region_code': ['REG_NORTH', 'REG_SOUTH']
         })
-        orders['order_date'] = pd.to_datetime(orders['order_date'], errors='coerce')
-        cleaned = orders[orders['order_date'] <= pd.Timestamp.now()]
-        self.assertEqual(len(cleaned), 1)
-        self.assertEqual(cleaned['order_id'].values[0], 'ORD-2')
-
+        
+        cleaned_orders, report = clean_orders(orders)
+        self.assertEqual(len(cleaned_orders), 1)
+        self.assertEqual(cleaned_orders['order_id'].values[0], 'ORD-000002')
+        self.assertEqual(report['future_dates_dropped'], 1)
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

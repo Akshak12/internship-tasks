@@ -1,26 +1,521 @@
-product_id,product_name,category,base_price
-PRD-101,Amul Butter 500g,Dairy,55.0
-PRD-102,Mother Dairy Milk 1L,Dairy,66.0
-PRD-103,Paneer 200g,Dairy,85.0
-PRD-104,Greek Yogurt 150g,Dairy,50.0
-PRD-105,Amul Cheese Slices 200g,Dairy,120.0
-PRD-106,Whole Wheat Bread,Bakery,45.0
-PRD-107,White Bread,Bakery,35.0
-PRD-108,Croissant,Bakery,60.0
-PRD-109,Chocolate Muffin,Bakery,40.0
-PRD-110,Garlic Bread,Bakery,80.0
-PRD-111,Coca Cola 2L,Beverages,99.0
-PRD-112,Tropicana Orange 1L,Beverages,99.0
-PRD-113,Nescafé Classic 100g,Beverages,299.0
-PRD-114,Red Label Tea 250g,Beverages,140.0
-PRD-115,Pepsi 750ml,Beverages,45.0
-PRD-116,Organic Bananas 1kg,Produce,60.0
-PRD-117,Washington Apples 1kg,Produce,220.0
-PRD-118,Onions 5kg,Produce,180.0
-PRD-119,Potatoes 5kg,Produce,150.0
-PRD-120,Tomatoes 1kg,Produce,40.0
-PRD-121,Lays Potato Chips,Snacks,20.0
-PRD-122,Oreo Biscuits,Snacks,30.0
-PRD-123,Kurkure Masala Munch,Snacks,20.0
-PRD-124,Haldiram Bhujia 150g,Snacks,55.0
-PRD-125,Cadbury Dairy Milk 100g,Snacks,100.0
+product_id,product_name,category,subcategory,cost_price
+PRD-0101,"Rodriguez, Figueroa And Sanchez Phone Model 5",Electronics,Phones,19968.9
+PRD-0102,Darkslategray T-Shirt,Clothing,T-Shirts,3448.16
+PRD-0103,"Garcia, Yang And Gardner Camera Model 7",Electronics,Cameras,3026.72
+PRD-0104,"Henderson, Johnson And Robinson Laptop Model 4",Electronics,Laptops,40675.75
+PRD-0105,"Guzman, Hoffman And Baldwin Camera Model 4",Electronics,Cameras,57423.56
+PRD-0106,'Total Needs-Based Instruction Set' Book,Books,Non-Fiction,728.89
+PRD-0107,Metal Furniture,Home,Furniture,10517.37
+PRD-0108,Metal Lighting,Home,Lighting,3347.41
+PRD-0109,Wooden Furniture,Home,Furniture,5791.92
+PRD-0110,Glass Lighting,Home,Lighting,12135.85
+PRD-0111,'Face-To-Face Local Parallelism' Book,Books,Children,274.76
+PRD-0112,'Grass-Roots 24Hour Task-Force' Book,Books,Fiction,872.86
+PRD-0113,Metal Decor,Home,Decor,10612.89
+PRD-0114,Wolfe Llc Laptop Model 5,Electronics,Laptops,78825.11
+PRD-0115,Lightseagreen T-Shirt,Clothing,T-Shirts,2024.61
+PRD-0116,'Distributed Didactic Task-Force' Book,Books,Sci-Fi,327.72
+PRD-0117,Glass Cookware,Home,Cookware,10572.03
+PRD-0118,Garcia-James Camera Model 3,Electronics,Cameras,42964.12
+PRD-0119,Mintcream Jean,Clothing,Jeans,2418.85
+PRD-0120,Metal Decor,Home,Decor,10316.52
+PRD-0121,Munoz-Roman Laptop Model 1,Electronics,Laptops,64501.14
+PRD-0122,'Upgradable Logistical Monitoring' Book,Books,Sci-Fi,192.66
+PRD-0123,Ceramic Cookware,Home,Cookware,6025.13
+PRD-0124,'Decentralized Homogeneous Artificial Intelligence' Book,Books,Non-Fiction,470.83
+PRD-0125,Lightyellow Sneaker,Clothing,Sneakers,2787.09
+PRD-0126,'Self-Enabling Regional Hierarchy' Book,Books,Children,659.16
+PRD-0127,Goldenrod Jean,Clothing,Jeans,2645.73
+PRD-0128,"Jones, Stanley And Mejia Phone Model 2",Electronics,Phones,12650.88
+PRD-0129,Cyan Sock,Clothing,Socks,3062.76
+PRD-0130,'Focused Bandwidth-Monitored Implementation' Book,Books,Biography,934.24
+PRD-0131,'Grass-Roots Logistical Productivity' Book,Books,Children,451.98
+PRD-0132,Martin-Kelly Phone Model 9,Electronics,Phones,60194.79
+PRD-0133,Glass Furniture,Home,Furniture,6606.26
+PRD-0134,'Synchronized Encompassing Standardization' Book,Books,Fiction,1435.34
+PRD-0135,Metal Decor,Home,Decor,7689.07
+PRD-0136,"Wong, Lynch And Jackson Headphone Model 9",Electronics,Headphones,48913.13
+PRD-0137,Lemonchiffon Jacket,Clothing,Jackets,3860.05
+PRD-0138,Ford Llc Camera Model 6,Electronics,Cameras,39344.15
+PRD-0139,"Watts, Robinson And Nguyen Headphone Model 5",Electronics,Headphones,19536.46
+PRD-0140,Chartreuse Sneaker,Clothing,Sneakers,4745.36
+PRD-0141,Underwood Llc Smartwatche Model 2,Electronics,Smartwatches,78249.77
+PRD-0142,Palegoldenrod Jean,Clothing,Jeans,3366.8
+PRD-0143,Lightgreen Jacket,Clothing,Jackets,2732.83
+PRD-0144,'Cloned Didactic Open System' Book,Books,Non-Fiction,1400.48
+PRD-0145,Maroon Jacket,Clothing,Jackets,2115.16
+PRD-0146,Ceramic Bedding,Home,Bedding,1946.91
+PRD-0147,Hotpink T-Shirt,Clothing,T-Shirts,1822.81
+PRD-0148,Springgreen Sneaker,Clothing,Sneakers,1257.04
+PRD-0149,Wilkerson-Day Phone Model 4,Electronics,Phones,5858.33
+PRD-0150,Baker And Sons Headphone Model 2,Electronics,Headphones,41375.41
+PRD-0151,Metal Bedding,Home,Bedding,8157.62
+PRD-0152,'User-Friendly Next Generation Monitoring' Book,Books,Non-Fiction,1198.47
+PRD-0153,'Fundamental Value-Added Paradigm' Book,Books,Non-Fiction,232.06
+PRD-0154,'Optimized Optimal Initiative' Book,Books,Sci-Fi,693.01
+PRD-0155,'Multi-Lateral Directional Challenge' Book,Books,Fiction,1042.71
+PRD-0156,"Snyder, Campos And Callahan Phone Model 7",Electronics,Phones,58392.98
+PRD-0157,Burton Ltd Laptop Model 4,Electronics,Laptops,15621.61
+PRD-0158,'Optimized Radical Architecture' Book,Books,Non-Fiction,690.63
+PRD-0159,Metal Bedding,Home,Bedding,13136.12
+PRD-0160,James-Ferrell Smartwatche Model 9,Electronics,Smartwatches,8283.74
+PRD-0161,"King, Tran And Dunlap Phone Model 4",Electronics,Phones,13721.73
+PRD-0162,'Synergized Uniform Budgetary Management' Book,Books,Biography,399.25
+PRD-0163,'Synergized National System Engine' Book,Books,Fiction,330.49
+PRD-0164,Mack-Peterson Smartwatche Model 5,Electronics,Smartwatches,74158.19
+PRD-0165,'Implemented Intermediate Complexity' Book,Books,Sci-Fi,692.21
+PRD-0166,'Persevering 24Hour Success' Book,Books,Non-Fiction,365.86
+PRD-0167,Lightgray T-Shirt,Clothing,T-Shirts,2980.07
+PRD-0168,"Gill, Romero And Rodriguez Headphone Model 1",Electronics,Headphones,4486.32
+PRD-0169,'Self-Enabling Exuding Productivity' Book,Books,Children,1387.14
+PRD-0170,Tan T-Shirt,Clothing,T-Shirts,4811.74
+PRD-0171,"Gonzalez, Brooks And Martin Laptop Model 2",Electronics,Laptops,47805.29
+PRD-0172,Wheat Sock,Clothing,Socks,775.46
+PRD-0173,Aliceblue Sneaker,Clothing,Sneakers,3053.69
+PRD-0174,"Nguyen, Smith And Hickman Smartwatche Model 9",Electronics,Smartwatches,25651.4
+PRD-0175,Glass Cookware,Home,Cookware,3694.49
+PRD-0176,'Integrated Disintermediate Approach' Book,Books,Non-Fiction,1040.37
+PRD-0177,Glass Bedding,Home,Bedding,13945.92
+PRD-0178,Humphrey Inc Phone Model 8,Electronics,Phones,49882.16
+PRD-0179,Dennis Inc Phone Model 9,Electronics,Phones,17445.77
+PRD-0180,Glass Cookware,Home,Cookware,13230.83
+PRD-0181,White Jacket,Clothing,Jackets,1567.94
+PRD-0182,'Visionary Clear-Thinking Capacity' Book,Books,Children,1084.96
+PRD-0183,"Alvarez, Pierce And Baker Camera Model 5",Electronics,Cameras,74574.61
+PRD-0184,"Henderson, Lewis And Ryan Laptop Model 5",Electronics,Laptops,9676.58
+PRD-0185,"Vaughn, Marquez And Ross Camera Model 3",Electronics,Cameras,22151.68
+PRD-0186,Navy Jacket,Clothing,Jackets,1177.27
+PRD-0187,Ceramic Decor,Home,Decor,3879.15
+PRD-0188,Lam-Hayes Phone Model 7,Electronics,Phones,66433.17
+PRD-0189,Walker Llc Phone Model 6,Electronics,Phones,61803.98
+PRD-0190,Ceramic Cookware,Home,Cookware,8342.45
+PRD-0191,'Ameliorated Optimizing Neural-Net' Book,Books,Children,113.54
+PRD-0192,Chapman Inc Laptop Model 9,Electronics,Laptops,3364.24
+PRD-0193,Metal Decor,Home,Decor,6532.33
+PRD-0194,Zimmerman Inc Headphone Model 6,Electronics,Headphones,71969.03
+PRD-0195,Jones Inc Headphone Model 4,Electronics,Headphones,54724.3
+PRD-0196,Jones-Young Headphone Model 9,Electronics,Headphones,70788.71
+PRD-0197,'Synchronized Mobile Data-Warehouse' Book,Books,Children,1149.27
+PRD-0198,Yellow Jean,Clothing,Jeans,4885.79
+PRD-0199,Darkseagreen Sock,Clothing,Socks,318.97
+PRD-0200,Metal Bedding,Home,Bedding,4112.06
+PRD-0201,"Walls, Duncan And Kennedy Smartwatche Model 1",Electronics,Smartwatches,68758.16
+PRD-0202,Sienna Jean,Clothing,Jeans,4119.62
+PRD-0203,'Open-Source Content-Based Attitude' Book,Books,Sci-Fi,527.27
+PRD-0204,Darkgray Jean,Clothing,Jeans,313.59
+PRD-0205,Plum Sock,Clothing,Socks,1775.66
+PRD-0206,Henderson-Owens Headphone Model 6,Electronics,Headphones,51497.8
+PRD-0207,'Upgradable Actuating Service-Desk' Book,Books,Children,563.61
+PRD-0208,"Joyce, Garcia And Powell Phone Model 5",Electronics,Phones,14696.14
+PRD-0209,Wooden Furniture,Home,Furniture,9009.08
+PRD-0210,Ceramic Lighting,Home,Lighting,9152.2
+PRD-0211,Mcbride-Rodriguez Smartwatche Model 4,Electronics,Smartwatches,20750.44
+PRD-0212,'Ergonomic Content-Based Monitoring' Book,Books,Fiction,827.89
+PRD-0213,Rosybrown Jacket,Clothing,Jackets,2270.23
+PRD-0214,Glass Decor,Home,Decor,10001.3
+PRD-0215,Henderson Llc Headphone Model 9,Electronics,Headphones,25088.13
+PRD-0216,'Persistent Dynamic Archive' Book,Books,Sci-Fi,663.36
+PRD-0217,Metal Decor,Home,Decor,2998.83
+PRD-0218,'Organic Neutral Attitude' Book,Books,Non-Fiction,961.72
+PRD-0219,Wooden Bedding,Home,Bedding,4662.54
+PRD-0220,Burlywood Sock,Clothing,Socks,3971.64
+PRD-0221,Ceramic Bedding,Home,Bedding,6716.07
+PRD-0222,Yellow Sneaker,Clothing,Sneakers,2471.29
+PRD-0223,Aquamarine T-Shirt,Clothing,T-Shirts,1562.17
+PRD-0224,Metal Furniture,Home,Furniture,10141.02
+PRD-0225,Darkgoldenrod Jean,Clothing,Jeans,907.3
+PRD-0226,Martin Group Laptop Model 8,Electronics,Laptops,49096.28
+PRD-0227,Lewis-Morales Smartwatche Model 7,Electronics,Smartwatches,70947.88
+PRD-0228,Chocolate Sock,Clothing,Socks,2573.01
+PRD-0229,Firebrick Jean,Clothing,Jeans,3349.08
+PRD-0230,Smith-Myers Phone Model 7,Electronics,Phones,17897.87
+PRD-0231,'Persevering Executive Interface' Book,Books,Fiction,880.37
+PRD-0232,"Bernard, Cowan And Peters Smartwatche Model 3",Electronics,Smartwatches,64212.62
+PRD-0233,Ceramic Bedding,Home,Bedding,12483.95
+PRD-0234,'Universal Mobile Collaboration' Book,Books,Non-Fiction,1141.12
+PRD-0235,'Ergonomic Explicit Data-Warehouse' Book,Books,Biography,462.87
+PRD-0236,Chartreuse Jacket,Clothing,Jackets,3875.91
+PRD-0237,'Reduced User-Facing Moratorium' Book,Books,Non-Fiction,484.44
+PRD-0238,Adkins Inc Headphone Model 4,Electronics,Headphones,22101.35
+PRD-0239,Wooden Decor,Home,Decor,2204.85
+PRD-0240,Burlywood Sock,Clothing,Socks,3530.96
+PRD-0241,Silver T-Shirt,Clothing,T-Shirts,2191.37
+PRD-0242,Ceramic Decor,Home,Decor,6324.25
+PRD-0243,Steelblue Sock,Clothing,Socks,2069.49
+PRD-0244,"Moore, Yu And Miller Camera Model 7",Electronics,Cameras,38419.89
+PRD-0245,Ceramic Lighting,Home,Lighting,12823.7
+PRD-0246,'Enterprise-Wide Asymmetric Policy' Book,Books,Children,1146.52
+PRD-0247,Cornflowerblue Sock,Clothing,Socks,1253.22
+PRD-0248,'Synergistic Disintermediate Initiative' Book,Books,Biography,140.63
+PRD-0249,Metal Bedding,Home,Bedding,12631.51
+PRD-0250,Darkorchid Sneaker,Clothing,Sneakers,2763.79
+PRD-0251,'Re-Contextualized Dynamic Paradigm' Book,Books,Children,890.15
+PRD-0252,"Williams, Miller And Sandoval Phone Model 7",Electronics,Phones,11288.11
+PRD-0253,'Re-Contextualized Multi-State Functionalities' Book,Books,Non-Fiction,170.4
+PRD-0254,'Fundamental Demand-Driven Secured Line' Book,Books,Sci-Fi,396.32
+PRD-0255,Ceramic Lighting,Home,Lighting,4282.11
+PRD-0256,'Universal Foreground Encoding' Book,Books,Sci-Fi,1268.88
+PRD-0257,'Fundamental Hybrid Capacity' Book,Books,Fiction,1148.63
+PRD-0258,"Brewer, Bryant And Hickman Headphone Model 4",Electronics,Headphones,52186.46
+PRD-0259,Smith Plc Phone Model 4,Electronics,Phones,16349.17
+PRD-0260,"Ferrell, Jones And Lewis Camera Model 3",Electronics,Cameras,19464.32
+PRD-0261,'Fundamental Clear-Thinking Hardware' Book,Books,Fiction,889.56
+PRD-0262,Cornflowerblue Sock,Clothing,Socks,3557.43
+PRD-0263,Wooden Cookware,Home,Cookware,11700.21
+PRD-0264,Lemonchiffon Jacket,Clothing,Jackets,718.87
+PRD-0265,Mitchell-Kim Headphone Model 7,Electronics,Headphones,32034.03
+PRD-0266,Yellowgreen T-Shirt,Clothing,T-Shirts,3042.07
+PRD-0267,Limegreen T-Shirt,Clothing,T-Shirts,3546.53
+PRD-0268,Wooden Decor,Home,Decor,11973.97
+PRD-0269,"Riggs, Roman And Rice Headphone Model 9",Electronics,Headphones,34556.05
+PRD-0270,Glass Furniture,Home,Furniture,337.88
+PRD-0271,'Synchronized Neutral Framework' Book,Books,Biography,247.75
+PRD-0272,Metal Bedding,Home,Bedding,6616.98
+PRD-0273,Ceramic Decor,Home,Decor,7053.38
+PRD-0274,Metal Lighting,Home,Lighting,12486.36
+PRD-0275,"Garcia, Humphrey And Baker Headphone Model 8",Electronics,Headphones,19887.14
+PRD-0276,'Customer-Focused Value-Added Neural-Net' Book,Books,Children,954.46
+PRD-0277,'Distributed Encompassing Forecast' Book,Books,Sci-Fi,140.18
+PRD-0278,Ceramic Cookware,Home,Cookware,3299.98
+PRD-0279,Glass Lighting,Home,Lighting,13222.75
+PRD-0280,Wooden Decor,Home,Decor,7821.91
+PRD-0281,Honeydew T-Shirt,Clothing,T-Shirts,1358.51
+PRD-0282,'Universal Global Database' Book,Books,Biography,877.25
+PRD-0283,Lightgray Sock,Clothing,Socks,3300.33
+PRD-0284,'Profit-Focused Mobile Extranet' Book,Books,Biography,1210.11
+PRD-0285,Davis Group Headphone Model 4,Electronics,Headphones,32649.89
+PRD-0286,Lightsalmon Jacket,Clothing,Jackets,3387.01
+PRD-0287,Glass Bedding,Home,Bedding,6468.73
+PRD-0288,Ceramic Lighting,Home,Lighting,4173.11
+PRD-0289,Wooden Cookware,Home,Cookware,10861.07
+PRD-0290,Metal Furniture,Home,Furniture,2994.38
+PRD-0291,'Balanced 24Hour Groupware' Book,Books,Sci-Fi,1114.42
+PRD-0292,Metal Furniture,Home,Furniture,4549.26
+PRD-0293,Glass Cookware,Home,Cookware,360.1
+PRD-0294,Darkseagreen Jacket,Clothing,Jackets,418.48
+PRD-0295,"Whitney, Martin And Ramos Camera Model 5",Electronics,Cameras,55944.68
+PRD-0296,Pink Sock,Clothing,Socks,692.42
+PRD-0297,"Smith, Jones And Ware Camera Model 5",Electronics,Cameras,37817.06
+PRD-0298,'Distributed Needs-Based Alliance' Book,Books,Sci-Fi,358.11
+PRD-0299,Aguilar-Hernandez Headphone Model 8,Electronics,Headphones,9569.93
+PRD-0300,Williams Llc Smartwatche Model 8,Electronics,Smartwatches,6389.53
+PRD-0301,Nolan And Sons Laptop Model 3,Electronics,Laptops,64985.8
+PRD-0302,Metal Furniture,Home,Furniture,1909.01
+PRD-0303,'Synergized Dynamic Secured Line' Book,Books,Children,934.58
+PRD-0304,Darkkhaki Sneaker,Clothing,Sneakers,2025.81
+PRD-0305,'Multi-Channeled Zero-Defect Open Architecture' Book,Books,Sci-Fi,1304.23
+PRD-0306,'Open-Source Regional Synergy' Book,Books,Sci-Fi,896.08
+PRD-0307,Frost And Sons Camera Model 2,Electronics,Cameras,75833.42
+PRD-0308,Dodgerblue Jean,Clothing,Jeans,1470.3
+PRD-0309,Keith Inc Laptop Model 4,Electronics,Laptops,14318.18
+PRD-0310,Doyle Llc Laptop Model 1,Electronics,Laptops,32977.15
+PRD-0311,'Open-Source Static Support' Book,Books,Sci-Fi,145.7
+PRD-0312,Ceramic Lighting,Home,Lighting,1207.02
+PRD-0313,Lightblue Jacket,Clothing,Jackets,3981.57
+PRD-0314,Lightgreen Sock,Clothing,Socks,750.93
+PRD-0315,Dimgray Jean,Clothing,Jeans,4560.37
+PRD-0316,Darkmagenta T-Shirt,Clothing,T-Shirts,486.26
+PRD-0317,Glass Decor,Home,Decor,6671.43
+PRD-0318,'Multi-Tiered 5Thgeneration Leverage' Book,Books,Sci-Fi,1079.63
+PRD-0319,Ceramic Decor,Home,Decor,6650.72
+PRD-0320,Gonzalez Group Smartwatche Model 6,Electronics,Smartwatches,48495.23
+PRD-0321,Torres-Pope Phone Model 4,Electronics,Phones,76971.93
+PRD-0322,Walker Ltd Headphone Model 1,Electronics,Headphones,61167.17
+PRD-0323,Goldenrod Sock,Clothing,Socks,2691.03
+PRD-0324,'Open-Architected Full-Range Focus Group' Book,Books,Sci-Fi,354.08
+PRD-0325,'Cloned Zero Administration Focus Group' Book,Books,Biography,1456.68
+PRD-0326,'Monitored Secondary Migration' Book,Books,Sci-Fi,671.69
+PRD-0327,Metal Furniture,Home,Furniture,5047.58
+PRD-0328,'Open-Architected Systematic Monitoring' Book,Books,Sci-Fi,1027.62
+PRD-0329,'Managed 4Thgeneration Budgetary Management' Book,Books,Children,151.38
+PRD-0330,White-Estes Headphone Model 5,Electronics,Headphones,26200.27
+PRD-0331,'Fundamental 5Thgeneration Benchmark' Book,Books,Children,1254.9
+PRD-0332,"Hamilton, Chandler And Edwards Camera Model 8",Electronics,Cameras,33353.18
+PRD-0333,Teal Sneaker,Clothing,Sneakers,1936.54
+PRD-0334,'Customizable Human-Resource Orchestration' Book,Books,Biography,1163.99
+PRD-0335,Gold Jacket,Clothing,Jackets,2836.25
+PRD-0336,Ceramic Bedding,Home,Bedding,1953.18
+PRD-0337,Lightcyan Jean,Clothing,Jeans,1691.6
+PRD-0338,Fletcher Inc Camera Model 7,Electronics,Cameras,7910.13
+PRD-0339,"Frost, Ryan And Ball Smartwatche Model 2",Electronics,Smartwatches,51992.92
+PRD-0340,Gray Sock,Clothing,Socks,4676.73
+PRD-0341,Glass Decor,Home,Decor,6320.03
+PRD-0342,'Multi-Lateral Intermediate Architecture' Book,Books,Biography,441.22
+PRD-0343,Mediumpurple Sock,Clothing,Socks,1114.93
+PRD-0344,Maroon T-Shirt,Clothing,T-Shirts,1525.99
+PRD-0345,'Switchable Bottom-Line Success' Book,Books,Sci-Fi,1407.95
+PRD-0346,Glass Furniture,Home,Furniture,10931.86
+PRD-0347,'Innovative Motivating Function' Book,Books,Non-Fiction,725.17
+PRD-0348,'Synchronized Incremental Graphic Interface' Book,Books,Sci-Fi,565.42
+PRD-0349,'Open-Architected Tangible Frame' Book,Books,Biography,1405.99
+PRD-0350,Darksalmon Jean,Clothing,Jeans,2944.63
+PRD-0351,Goldenrod Sock,Clothing,Socks,409.51
+PRD-0352,'Operative Static Implementation' Book,Books,Biography,640.51
+PRD-0353,Forestgreen Sock,Clothing,Socks,4831.16
+PRD-0354,Limegreen Sneaker,Clothing,Sneakers,4833.7
+PRD-0355,Ceramic Furniture,Home,Furniture,1630.72
+PRD-0356,'Open-Architected Neutral Ability' Book,Books,Fiction,1111.42
+PRD-0357,'Innovative Executive Database' Book,Books,Non-Fiction,204.76
+PRD-0358,Ceramic Lighting,Home,Lighting,9800.07
+PRD-0359,Ceramic Decor,Home,Decor,14318.97
+PRD-0360,'Optional Zero Tolerance Paradigm' Book,Books,Children,150.26
+PRD-0361,"Pena, Marshall And Ramos Laptop Model 5",Electronics,Laptops,79795.36
+PRD-0362,Dixon Ltd Smartwatche Model 2,Electronics,Smartwatches,60949.39
+PRD-0363,Hopkins Llc Smartwatche Model 3,Electronics,Smartwatches,55673.09
+PRD-0364,"Beck, Harvey And Davis Phone Model 6",Electronics,Phones,63793.41
+PRD-0365,Glass Lighting,Home,Lighting,6545.7
+PRD-0366,Lavenderblush Sneaker,Clothing,Sneakers,2177.85
+PRD-0367,Magenta Jean,Clothing,Jeans,1040.33
+PRD-0368,'Face-To-Face Dedicated Circuit' Book,Books,Children,1056.39
+PRD-0369,'Assimilated 6Thgeneration Encryption' Book,Books,Children,300.36
+PRD-0370,'Phased Reciprocal Throughput' Book,Books,Sci-Fi,743.4
+PRD-0371,Gibson Ltd Smartwatche Model 5,Electronics,Smartwatches,54370.07
+PRD-0372,Goldenrod T-Shirt,Clothing,T-Shirts,2320.3
+PRD-0373,Glass Decor,Home,Decor,9638.24
+PRD-0374,'Universal Tangible Info-Mediaries' Book,Books,Sci-Fi,739.57
+PRD-0375,Ceramic Cookware,Home,Cookware,12822.03
+PRD-0376,Ross-Hernandez Laptop Model 7,Electronics,Laptops,45967.85
+PRD-0377,Wooden Lighting,Home,Lighting,14672.48
+PRD-0378,'Team-Oriented 24Hour System Engine' Book,Books,Sci-Fi,111.34
+PRD-0379,Osborne And Sons Camera Model 8,Electronics,Cameras,66710.69
+PRD-0380,Glass Cookware,Home,Cookware,3402.22
+PRD-0381,Fuchsia Sneaker,Clothing,Sneakers,1403.01
+PRD-0382,Tomato T-Shirt,Clothing,T-Shirts,4536.34
+PRD-0383,Williams-Wright Headphone Model 8,Electronics,Headphones,3152.48
+PRD-0384,Wooden Cookware,Home,Cookware,13657.97
+PRD-0385,Metal Bedding,Home,Bedding,3131.8
+PRD-0386,Glass Decor,Home,Decor,12482.52
+PRD-0387,Glass Bedding,Home,Bedding,11236.41
+PRD-0388,Ceramic Furniture,Home,Furniture,14448.97
+PRD-0389,Darkred Jean,Clothing,Jeans,4328.67
+PRD-0390,'Persevering Client-Driven Website' Book,Books,Children,612.09
+PRD-0391,'Persistent Static Moderator' Book,Books,Fiction,470.24
+PRD-0392,"Larson, Dodson And Vance Smartwatche Model 6",Electronics,Smartwatches,53989.86
+PRD-0393,Ceramic Decor,Home,Decor,12362.9
+PRD-0394,Metal Furniture,Home,Furniture,7151.43
+PRD-0395,Metal Decor,Home,Decor,9767.64
+PRD-0396,'Seamless Uniform Middleware' Book,Books,Sci-Fi,1008.94
+PRD-0397,Rivas-Kelley Laptop Model 1,Electronics,Laptops,75727.79
+PRD-0398,Wooden Bedding,Home,Bedding,1593.3
+PRD-0399,Dimgray Sock,Clothing,Socks,2377.49
+PRD-0400,'User-Friendly Methodical Knowledge User' Book,Books,Children,1139.18
+PRD-0401,Lightgoldenrodyellow Sock,Clothing,Socks,3343.63
+PRD-0402,'Versatile Dynamic Productivity' Book,Books,Children,671.36
+PRD-0403,Glass Furniture,Home,Furniture,3376.45
+PRD-0404,'Grass-Roots Zero Administration Time-Frame' Book,Books,Non-Fiction,1297.63
+PRD-0405,"Washington, Allen And Gonzales Headphone Model 9",Electronics,Headphones,72184.85
+PRD-0406,Ceramic Furniture,Home,Furniture,4246.84
+PRD-0407,"Mitchell, Nelson And Flores Smartwatche Model 2",Electronics,Smartwatches,53190.11
+PRD-0408,"Miller, Hernandez And Reyes Phone Model 6",Electronics,Phones,19863.73
+PRD-0409,Deepskyblue Sneaker,Clothing,Sneakers,1184.99
+PRD-0410,Hotpink Sneaker,Clothing,Sneakers,1236.57
+PRD-0411,Coral Jacket,Clothing,Jackets,3916.97
+PRD-0412,Russell-Daniels Headphone Model 3,Electronics,Headphones,79008.42
+PRD-0413,Wooden Cookware,Home,Cookware,9966.71
+PRD-0414,Brown-Wall Laptop Model 1,Electronics,Laptops,28980.26
+PRD-0415,Orange Sneaker,Clothing,Sneakers,1754.1
+PRD-0416,Beige Jacket,Clothing,Jackets,451.52
+PRD-0417,'Virtual Object-Oriented Implementation' Book,Books,Children,259.11
+PRD-0418,Smith-Bell Smartwatche Model 8,Electronics,Smartwatches,62352.35
+PRD-0419,Castaneda-Ashley Smartwatche Model 9,Electronics,Smartwatches,18113.21
+PRD-0420,Medina-Navarro Camera Model 5,Electronics,Cameras,36914.38
+PRD-0421,"Hurst, Freeman And Nelson Phone Model 8",Electronics,Phones,67860.23
+PRD-0422,'Pre-Emptive 4Thgeneration Info-Mediaries' Book,Books,Fiction,786.38
+PRD-0423,'Mandatory Static Service-Desk' Book,Books,Fiction,1358.97
+PRD-0424,Metal Decor,Home,Decor,1125.38
+PRD-0425,Glass Decor,Home,Decor,5806.43
+PRD-0426,Ceramic Bedding,Home,Bedding,1622.8
+PRD-0427,Ramsey-Pittman Camera Model 4,Electronics,Cameras,34690.56
+PRD-0428,Darksalmon Sock,Clothing,Socks,1826.87
+PRD-0429,'Secured National Algorithm' Book,Books,Biography,682.39
+PRD-0430,Vargas-Alvarado Headphone Model 7,Electronics,Headphones,25345.62
+PRD-0431,Metal Lighting,Home,Lighting,10349.29
+PRD-0432,'Configurable Secondary Interface' Book,Books,Fiction,227.71
+PRD-0433,Camacho And Sons Phone Model 7,Electronics,Phones,8176.87
+PRD-0434,Wooden Cookware,Home,Cookware,8859.01
+PRD-0435,Ceramic Furniture,Home,Furniture,5400.93
+PRD-0436,'Business-Focused Empowering Implementation' Book,Books,Fiction,1455.76
+PRD-0437,Wooden Lighting,Home,Lighting,8732.09
+PRD-0438,Mediumorchid Jean,Clothing,Jeans,3352.33
+PRD-0439,Hotpink T-Shirt,Clothing,T-Shirts,1880.55
+PRD-0440,Glass Furniture,Home,Furniture,8675.39
+PRD-0441,'Persevering Fresh-Thinking Graphical User Interface' Book,Books,Children,1464.37
+PRD-0442,Ramirez-Bean Camera Model 5,Electronics,Cameras,2801.78
+PRD-0443,Glass Lighting,Home,Lighting,5362.7
+PRD-0444,Peachpuff Jean,Clothing,Jeans,2918.34
+PRD-0445,'Function-Based Attitude-Oriented Leverage' Book,Books,Fiction,298.62
+PRD-0446,Curry Inc Phone Model 9,Electronics,Phones,17603.06
+PRD-0447,'Monitored Directional Projection' Book,Books,Biography,577.25
+PRD-0448,Glass Lighting,Home,Lighting,11686.01
+PRD-0449,Harrington Ltd Phone Model 3,Electronics,Phones,13014.09
+PRD-0450,Webster And Sons Phone Model 5,Electronics,Phones,35727.48
+PRD-0451,'Exclusive 3Rdgeneration Process Improvement' Book,Books,Biography,949.91
+PRD-0452,'Distributed Disintermediate Capacity' Book,Books,Sci-Fi,401.8
+PRD-0453,Caldwell-Elliott Headphone Model 7,Electronics,Headphones,9315.74
+PRD-0454,'Extended Maximized Standardization' Book,Books,Children,1033.99
+PRD-0455,Wang-Jackson Laptop Model 7,Electronics,Laptops,78763.43
+PRD-0456,"Stuart, Higgins And Strickland Phone Model 4",Electronics,Phones,24462.84
+PRD-0457,Dodgerblue Jean,Clothing,Jeans,3867.97
+PRD-0458,Wooden Lighting,Home,Lighting,264.79
+PRD-0459,'Integrated Bi-Directional Paradigm' Book,Books,Non-Fiction,280.86
+PRD-0460,Bisque Sneaker,Clothing,Sneakers,2881.87
+PRD-0461,Ceramic Furniture,Home,Furniture,12947.2
+PRD-0462,Johnston-Odonnell Smartwatche Model 1,Electronics,Smartwatches,37050.46
+PRD-0463,Sanders-Espinoza Headphone Model 7,Electronics,Headphones,46085.27
+PRD-0464,'Compatible Optimizing Solution' Book,Books,Sci-Fi,261.24
+PRD-0465,"Sanchez, Terry And Turner Headphone Model 3",Electronics,Headphones,64205.11
+PRD-0466,'Synergized Radical Workforce' Book,Books,Sci-Fi,223.38
+PRD-0467,Hogan Plc Laptop Model 7,Electronics,Laptops,47315.27
+PRD-0468,Reed Group Smartwatche Model 5,Electronics,Smartwatches,59791.48
+PRD-0469,Navajowhite Jacket,Clothing,Jackets,3939.77
+PRD-0470,Hunter Llc Camera Model 2,Electronics,Cameras,42683.08
+PRD-0471,Aquamarine Jacket,Clothing,Jackets,1885.28
+PRD-0472,Peachpuff Jean,Clothing,Jeans,693.46
+PRD-0473,Metal Cookware,Home,Cookware,9095.62
+PRD-0474,Garcia-Yu Laptop Model 8,Electronics,Laptops,37384.27
+PRD-0475,'Sharable Logistical Strategy' Book,Books,Children,1000.19
+PRD-0476,Metal Lighting,Home,Lighting,6680.48
+PRD-0477,'Distributed Intermediate Conglomeration' Book,Books,Biography,983.94
+PRD-0478,Wooden Decor,Home,Decor,5376.34
+PRD-0479,"Boyd, Santos And Gilbert Headphone Model 8",Electronics,Headphones,36427.15
+PRD-0480,"Hampton, Marshall And Petersen Headphone Model 5",Electronics,Headphones,6600.11
+PRD-0481,"Adams, Christian And Rivas Camera Model 9",Electronics,Cameras,31066.36
+PRD-0482,Ramirez Group Smartwatche Model 4,Electronics,Smartwatches,26061.38
+PRD-0483,'Fully-Configurable Web-Enabled Local Area Network' Book,Books,Children,311.21
+PRD-0484,"Bishop, Gray And Johnson Smartwatche Model 2",Electronics,Smartwatches,64971.86
+PRD-0485,Metal Furniture,Home,Furniture,731.26
+PRD-0486,'Inverse Contextually-Based Matrix' Book,Books,Biography,833.7
+PRD-0487,Hotpink Jacket,Clothing,Jackets,1989.69
+PRD-0488,Ceramic Bedding,Home,Bedding,11650.8
+PRD-0489,Salinas-Peterson Headphone Model 2,Electronics,Headphones,26710.42
+PRD-0490,'Right-Sized Tangible Focus Group' Book,Books,Sci-Fi,452.79
+PRD-0491,Aqua Jacket,Clothing,Jackets,591.21
+PRD-0492,Tomato Jacket,Clothing,Jackets,1689.11
+PRD-0493,'Ergonomic Attitude-Oriented Encoding' Book,Books,Non-Fiction,933.06
+PRD-0494,"Russell, Peters And Allen Headphone Model 9",Electronics,Headphones,30446.0
+PRD-0495,Wooden Cookware,Home,Cookware,9743.47
+PRD-0496,'Phased Secondary Structure' Book,Books,Children,606.56
+PRD-0497,Metal Lighting,Home,Lighting,14274.86
+PRD-0498,Metal Bedding,Home,Bedding,3514.16
+PRD-0499,Slategray Jean,Clothing,Jeans,570.39
+PRD-0500,Mcguire-Davis Camera Model 9,Electronics,Cameras,66892.03
+PRD-0501,Sullivan And Sons Headphone Model 3,Electronics,Headphones,47981.09
+PRD-0502,Linen Jean,Clothing,Jeans,1068.06
+PRD-0503,Navajowhite Sock,Clothing,Socks,409.72
+PRD-0504,Ceramic Cookware,Home,Cookware,9217.34
+PRD-0505,'Phased Neutral Moderator' Book,Books,Non-Fiction,847.62
+PRD-0506,Metal Bedding,Home,Bedding,5612.44
+PRD-0507,'Monitored Interactive Synergy' Book,Books,Biography,1177.21
+PRD-0508,'Reactive Full-Range Help-Desk' Book,Books,Children,838.44
+PRD-0509,Saddlebrown Jean,Clothing,Jeans,4046.04
+PRD-0510,Lightpink Jacket,Clothing,Jackets,450.46
+PRD-0511,'Integrated Eco-Centric Emulation' Book,Books,Sci-Fi,876.36
+PRD-0512,Griffith Llc Camera Model 2,Electronics,Cameras,23162.51
+PRD-0513,Darkorchid Jacket,Clothing,Jackets,2356.73
+PRD-0514,Whitesmoke Sock,Clothing,Socks,640.23
+PRD-0515,Ghostwhite Sock,Clothing,Socks,4446.22
+PRD-0516,Robinson Group Smartwatche Model 1,Electronics,Smartwatches,32018.09
+PRD-0517,Ceramic Cookware,Home,Cookware,14918.7
+PRD-0518,Wooden Cookware,Home,Cookware,4882.47
+PRD-0519,Hardy-Bray Headphone Model 3,Electronics,Headphones,11439.17
+PRD-0520,Metal Bedding,Home,Bedding,11418.79
+PRD-0521,'Progressive Radical Forecast' Book,Books,Biography,961.49
+PRD-0522,Wall Llc Phone Model 5,Electronics,Phones,17644.55
+PRD-0523,Khaki Sneaker,Clothing,Sneakers,4713.08
+PRD-0524,'Multi-Lateral Context-Sensitive Framework' Book,Books,Fiction,1186.64
+PRD-0525,Aquamarine Jacket,Clothing,Jackets,784.87
+PRD-0526,White Sock,Clothing,Socks,3266.97
+PRD-0527,'De-Engineered Even-Keeled Analyzer' Book,Books,Fiction,255.2
+PRD-0528,'Business-Focused Neutral Frame' Book,Books,Children,850.48
+PRD-0529,Darksalmon Jean,Clothing,Jeans,1598.11
+PRD-0530,"Oneill, Henry And Salas Camera Model 6",Electronics,Cameras,19624.86
+PRD-0531,'Re-Engineered Executive Leverage' Book,Books,Non-Fiction,1030.12
+PRD-0532,Alexander-Lopez Camera Model 6,Electronics,Cameras,5880.51
+PRD-0533,King Group Smartwatche Model 8,Electronics,Smartwatches,3960.99
+PRD-0534,'Customizable Asymmetric Initiative' Book,Books,Sci-Fi,455.11
+PRD-0535,Jones-Soto Headphone Model 2,Electronics,Headphones,27911.8
+PRD-0536,Hernandez Plc Camera Model 6,Electronics,Cameras,11106.06
+PRD-0537,Glass Decor,Home,Decor,12230.61
+PRD-0538,Limegreen Sock,Clothing,Socks,4907.93
+PRD-0539,'Configurable Dynamic Capability' Book,Books,Non-Fiction,1236.1
+PRD-0540,"Duran, Obrien And Gibbs Smartwatche Model 1",Electronics,Smartwatches,23828.68
+PRD-0541,Rowe Group Laptop Model 1,Electronics,Laptops,25589.87
+PRD-0542,Ceramic Decor,Home,Decor,14838.47
+PRD-0543,'Organized Leadingedge Framework' Book,Books,Sci-Fi,151.27
+PRD-0544,Pink Jacket,Clothing,Jackets,1913.48
+PRD-0545,Carroll-Brown Headphone Model 5,Electronics,Headphones,10395.76
+PRD-0546,Ceramic Bedding,Home,Bedding,11188.12
+PRD-0547,'User-Centric Bandwidth-Monitored Task-Force' Book,Books,Sci-Fi,1463.21
+PRD-0548,'Expanded Responsive Data-Warehouse' Book,Books,Biography,614.29
+PRD-0549,Ceramic Furniture,Home,Furniture,1322.07
+PRD-0550,Lightgray Sneaker,Clothing,Sneakers,1610.08
+PRD-0551,"Miller, Allen And Arnold Phone Model 6",Electronics,Phones,53043.08
+PRD-0552,Ceramic Bedding,Home,Bedding,2624.67
+PRD-0553,'Diverse 24Hour Installation' Book,Books,Sci-Fi,725.98
+PRD-0554,Ceramic Decor,Home,Decor,4227.15
+PRD-0555,Norris-Harrison Phone Model 7,Electronics,Phones,29383.23
+PRD-0556,Blanchedalmond T-Shirt,Clothing,T-Shirts,885.34
+PRD-0557,'Focused Executive Strategy' Book,Books,Fiction,276.72
+PRD-0558,Lightskyblue Jacket,Clothing,Jackets,1938.32
+PRD-0559,"Heath, Jones And Hall Camera Model 3",Electronics,Cameras,54485.43
+PRD-0560,Ceramic Lighting,Home,Lighting,11481.8
+PRD-0561,Lightgray Sneaker,Clothing,Sneakers,1961.36
+PRD-0562,Metal Lighting,Home,Lighting,14413.72
+PRD-0563,"Lawrence, Lara And Gonzalez Laptop Model 8",Electronics,Laptops,41660.75
+PRD-0564,Stephens Ltd Headphone Model 5,Electronics,Headphones,56471.01
+PRD-0565,Deeppink Sneaker,Clothing,Sneakers,1570.77
+PRD-0566,'Future-Proofed Client-Server Archive' Book,Books,Non-Fiction,271.69
+PRD-0567,Martin Llc Smartwatche Model 3,Electronics,Smartwatches,71944.98
+PRD-0568,'Right-Sized Value-Added Open System' Book,Books,Fiction,1234.72
+PRD-0569,Wooden Lighting,Home,Lighting,8317.46
+PRD-0570,Metal Lighting,Home,Lighting,10720.37
+PRD-0571,Lightslategray Jacket,Clothing,Jackets,2642.03
+PRD-0572,Martinez-Barker Laptop Model 3,Electronics,Laptops,19320.53
+PRD-0573,'Total Impactful Flexibility' Book,Books,Fiction,605.26
+PRD-0574,Metal Bedding,Home,Bedding,9237.43
+PRD-0575,"Fernandez, Kim And George Phone Model 5",Electronics,Phones,32153.72
+PRD-0576,'Optional User-Facing Graphic Interface' Book,Books,Children,675.11
+PRD-0577,'Robust Eco-Centric Algorithm' Book,Books,Children,203.25
+PRD-0578,Ceramic Furniture,Home,Furniture,7067.62
+PRD-0579,Metal Cookware,Home,Cookware,11551.56
+PRD-0580,Darkgoldenrod Sock,Clothing,Socks,2613.75
+PRD-0581,Hayden Plc Phone Model 9,Electronics,Phones,12664.73
+PRD-0582,Beige Jean,Clothing,Jeans,1748.77
+PRD-0583,Lightgreen Jacket,Clothing,Jackets,4747.92
+PRD-0584,Glass Furniture,Home,Furniture,3065.08
+PRD-0585,Glass Cookware,Home,Cookware,9274.26
+PRD-0586,"Williams, Avila And Ruiz Camera Model 3",Electronics,Cameras,47548.77
+PRD-0587,Red Jean,Clothing,Jeans,3361.92
+PRD-0588,Wooden Decor,Home,Decor,12404.76
+PRD-0589,White-Richards Phone Model 1,Electronics,Phones,75909.47
+PRD-0590,Ceramic Cookware,Home,Cookware,9328.91
+PRD-0591,"Olsen, Costa And Harrison Smartwatche Model 9",Electronics,Smartwatches,23528.9
+PRD-0592,Metal Bedding,Home,Bedding,12099.62
+PRD-0593,'Open-Source Full-Range Graphic Interface' Book,Books,Sci-Fi,734.96
+PRD-0594,"Garcia, Martin And Jenkins Laptop Model 8",Electronics,Laptops,33541.93
+PRD-0595,'Proactive Executive Protocol' Book,Books,Non-Fiction,576.27
+PRD-0596,Palegoldenrod Jacket,Clothing,Jackets,4335.13
+PRD-0597,Ceramic Lighting,Home,Lighting,2091.88
+PRD-0598,Wooden Decor,Home,Decor,4888.87
+PRD-0599,'Virtual Neutral Alliance' Book,Books,Fiction,474.46
+PRD-0600,Saddlebrown Jean,Clothing,Jeans,664.7
+PRD-0601,Ceramic Bedding,Home,Bedding,3836.81
+PRD-0602,Darkcyan Jacket,Clothing,Jackets,4682.01
+PRD-0603,Metal Cookware,Home,Cookware,7549.24
+PRD-0604,'Intuitive Eco-Centric Graphic Interface' Book,Books,Biography,1330.71
+PRD-0605,'Customizable Zero Administration Initiative' Book,Books,Fiction,226.07
+PRD-0606,'Profound 24Hour Protocol' Book,Books,Children,740.12
+PRD-0607,Yellow Jean,Clothing,Jeans,3000.05
+PRD-0608,Gutierrez-Lopez Phone Model 5,Electronics,Phones,39844.09
+PRD-0609,'Multi-Lateral Regional System Engine' Book,Books,Sci-Fi,851.37
+PRD-0610,Garrett-Wolf Smartwatche Model 3,Electronics,Smartwatches,70655.23
+PRD-0611,Glass Bedding,Home,Bedding,821.85
+PRD-0612,Adams And Sons Camera Model 9,Electronics,Cameras,15975.1
+PRD-0613,Ceramic Furniture,Home,Furniture,7638.19
+PRD-0614,Wooden Decor,Home,Decor,2060.65
+PRD-0615,Kim-Wolfe Smartwatche Model 6,Electronics,Smartwatches,63694.33
+PRD-0616,Glass Decor,Home,Decor,11361.23
+PRD-0617,Darkred Sneaker,Clothing,Sneakers,2643.79
+PRD-0618,Dudley Plc Phone Model 1,Electronics,Phones,11394.39
+PRD-0619,Ceramic Bedding,Home,Bedding,2361.77
+PRD-0620,Lawngreen Jacket,Clothing,Jackets,4670.57

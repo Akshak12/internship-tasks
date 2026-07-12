@@ -1,130 +1,225 @@
--- Cohort Analysis, Retention, Churn & RFM Segmentation
+-- Advanced SQL Analytics - Cohort, Segmentation & Complex CTEs
 
--- 1. Cohort Analysis and Retention Rate (by first purchase month)
-WITH customer_first_purchase AS (
+-- 10. CTE with Multiple Levels
+-- Level 1: Calculate monthly revenue per customer
+-- Level 2: Categorize customers: 'High' (>10000), 'Medium' (5000-10000), 'Low' (<5000)
+-- Level 3: Show count of customers in each category per month
+WITH monthly_customer_revenue AS (
+    SELECT 
+        o.customer_id,
+        STRFTIME('%Y-%m', o.order_date) AS order_month,
+        SUM(oi.quantity * oi.unit_price * (1 - oi.discount_percent / 100.0)) AS monthly_revenue
+    FROM orders o
+    JOIN order_items oi ON o.order_id = oi.order_id
+    WHERE o.status != 'CANCELLED'
+    GROUP BY o.customer_id, STRFTIME('%Y-%m', o.order_date)
+),
+customer_categories AS (
     SELECT 
         customer_id,
-        strftime('%Y-%m', MIN(order_date)) AS cohort_month
-    FROM orders
-    WHERE status != 'cancelled'
-    GROUP BY customer_id
-),
-customer_purchase_months AS (
-    SELECT DISTINCT
+        order_month,
+        monthly_revenue,
+        CASE 
+            WHEN monthly_revenue > 10000 THEN 'High'
+            WHEN monthly_revenue BETWEEN 5000 AND 10000 THEN 'Medium'
+            ELSE 'Low'
+        END AS category
+    FROM monthly_customer_revenue
+)
+SELECT 
+    order_month,
+    category,
+    COUNT(customer_id) AS customer_count
+FROM customer_categories
+GROUP BY order_month, category
+ORDER BY order_month, category;
+
+-- 11. NTILE for Segmentation
+-- Divide customers into 4 quartiles based on total lifetime value (LTV)
+-- Shows: customer_id, total_value, quartile, quartile_label (Platinum/Gold/Silver/Bronze)
+WITH customer_ltv AS (
+    SELECT 
         o.customer_id,
-        strftime('%Y-%m', o.order_date) AS purchase_month
+        SUM(oi.quantity * oi.unit_price * (1 - oi.discount_percent / 100.0)) AS total_value
     FROM orders o
-    WHERE o.status != 'cancelled'
+    JOIN order_items oi ON o.order_id = oi.order_id
+    WHERE o.status != 'CANCELLED'
+    GROUP BY o.customer_id
+),
+customer_tiles AS (
+    SELECT 
+        customer_id,
+        total_value,
+        NTILE(4) OVER (ORDER BY total_value DESC) AS quartile
+    FROM customer_ltv
+)
+SELECT 
+    customer_id,
+    ROUND(total_value, 2) AS total_value,
+    quartile,
+    CASE 
+        WHEN quartile = 1 THEN 'Platinum'
+        WHEN quartile = 2 THEN 'Gold'
+        WHEN quartile = 3 THEN 'Silver'
+        ELSE 'Bronze'
+    END AS quartile_label
+FROM customer_tiles
+ORDER BY total_value DESC;
+
+-- 12. Year-over-Year Comparison
+-- Compare each month's revenue with the same month in the previous year
+-- Shows: year, month, revenue, prev_year_revenue, yoy_growth_percent
+WITH monthly_revenue AS (
+    SELECT 
+        CAST(STRFTIME('%Y', o.order_date) AS INTEGER) AS sales_year,
+        CAST(STRFTIME('%m', o.order_date) AS INTEGER) AS sales_month,
+        SUM(oi.quantity * oi.unit_price * (1 - oi.discount_percent / 100.0)) AS revenue
+    FROM orders o
+    JOIN order_items oi ON o.order_id = oi.order_id
+    WHERE o.status != 'CANCELLED'
+    GROUP BY sales_year, sales_month
+)
+SELECT 
+    m1.sales_year AS year,
+    m1.sales_month AS month,
+    ROUND(m1.revenue, 2) AS revenue,
+    ROUND(m2.revenue, 2) AS prev_year_revenue,
+    CASE 
+        WHEN m2.revenue IS NULL OR m2.revenue = 0 THEN 'N/A'
+        ELSE ROUND(((m1.revenue - m2.revenue) * 100.0) / m2.revenue, 2) || '%'
+    END AS yoy_growth_percent
+FROM monthly_revenue m1
+LEFT JOIN monthly_revenue m2 
+    ON m1.sales_year = m2.sales_year + 1 
+   AND m1.sales_month = m2.sales_month
+ORDER BY year DESC, month DESC;
+
+-- 13. First/Last Value Analysis
+-- For each customer, show first purchased category and most recent purchased category
+-- Flag if they are different (category_shift = 'Yes'/'No')
+WITH customer_items_ordered AS (
+    SELECT 
+        o.customer_id,
+        p.category,
+        o.order_date,
+        ROW_NUMBER() OVER (PARTITION BY o.customer_id ORDER BY o.order_date ASC, oi.item_id ASC) AS rn_first,
+        ROW_NUMBER() OVER (PARTITION BY o.customer_id ORDER BY o.order_date DESC, oi.item_id DESC) AS rn_last
+    FROM orders o
+    JOIN order_items oi ON o.order_id = oi.order_id
+    JOIN products p ON oi.product_id = p.product_id
+    WHERE o.status != 'CANCELLED'
+),
+first_categories AS (
+    SELECT customer_id, category AS first_category
+    FROM customer_items_ordered
+    WHERE rn_first = 1
+),
+last_categories AS (
+    SELECT customer_id, category AS last_category
+    FROM customer_items_ordered
+    WHERE rn_last = 1
+)
+SELECT 
+    f.customer_id,
+    f.first_category,
+    l.last_category,
+    CASE 
+        WHEN f.first_category = l.last_category THEN 'No'
+        ELSE 'Yes'
+    END AS category_shift
+FROM first_categories f
+JOIN last_categories l ON f.customer_id = l.customer_id;
+
+-- 14. Cumulative Distribution
+-- Calculate what percentage of total revenue comes from the top N% of customers
+-- Shows: customer_id, revenue, cumulative_revenue, cumulative_percent
+WITH customer_revenue AS (
+    SELECT 
+        o.customer_id,
+        SUM(oi.quantity * oi.unit_price * (1 - oi.discount_percent / 100.0)) AS revenue
+    FROM orders o
+    JOIN order_items oi ON o.order_id = oi.order_id
+    WHERE o.status != 'CANCELLED'
+    GROUP BY o.customer_id
+),
+total_revenue AS (
+    SELECT SUM(revenue) AS grand_total FROM customer_revenue
+),
+customer_cum_revenue AS (
+    SELECT 
+        customer_id,
+        revenue,
+        SUM(revenue) OVER (ORDER BY revenue DESC) AS cumulative_revenue
+    FROM customer_revenue
+)
+SELECT 
+    c.customer_id,
+    ROUND(c.revenue, 2) AS revenue,
+    ROUND(c.cumulative_revenue, 2) AS cumulative_revenue,
+    ROUND((c.cumulative_revenue * 100.0) / t.grand_total, 2) || '%' AS cumulative_percent
+FROM customer_cum_revenue c
+CROSS JOIN total_revenue t
+ORDER BY c.revenue DESC;
+
+-- 15. Complex CTE: Cohort Analysis
+-- Group customers by registration month (cohort), tracking retention in month 0, 1, 2, 3
+WITH customer_cohort AS (
+    SELECT 
+        customer_id,
+        STRFTIME('%Y-%m', registration_date) AS cohort_month
+    FROM customers
 ),
 cohort_sizes AS (
     SELECT 
         cohort_month,
-        COUNT(DISTINCT customer_id) AS cohort_size
-    FROM customer_first_purchase
+        COUNT(customer_id) AS cohort_size
+    FROM customer_cohort
     GROUP BY cohort_month
+),
+customer_orders_months AS (
+    SELECT DISTINCT
+        o.customer_id,
+        STRFTIME('%Y-%m', o.order_date) AS order_month,
+        cc.cohort_month,
+        (CAST(STRFTIME('%Y', o.order_date) AS INTEGER) - CAST(STRFTIME('%Y', cc.cohort_month || '-01') AS INTEGER)) * 12 +
+        (CAST(STRFTIME('%m', o.order_date) AS INTEGER) - CAST(STRFTIME('%m', cc.cohort_month || '-01') AS INTEGER)) AS month_diff
+    FROM orders o
+    JOIN customer_cohort cc ON o.customer_id = cc.customer_id
+    WHERE o.status != 'CANCELLED'
 ),
 cohort_retention AS (
     SELECT 
-        f.cohort_month,
-        p.purchase_month,
-        (strftime('%Y', p.purchase_month || '-01') - strftime('%Y', f.cohort_month || '-01')) * 12 + 
-        (strftime('%m', p.purchase_month || '-01') - strftime('%m', f.cohort_month || '-01')) AS month_number,
-        COUNT(DISTINCT f.customer_id) AS retained_customers
-    FROM customer_first_purchase f
-    JOIN customer_purchase_months p ON f.customer_id = p.customer_id
-    GROUP BY f.cohort_month, p.purchase_month
+        cohort_month,
+        month_diff,
+        COUNT(DISTINCT customer_id) AS retained_customers
+    FROM customer_orders_months
+    WHERE month_diff >= 0
+    GROUP BY cohort_month, month_diff
 )
 SELECT 
-    cr.cohort_month,
-    cs.cohort_size,
-    cr.month_number,
-    cr.retained_customers,
-    ROUND((cr.retained_customers * 100.0) / cs.cohort_size, 2) AS retention_rate_pct
-FROM cohort_retention cr
-JOIN cohort_sizes cs ON cr.cohort_month = cs.cohort_month
-ORDER BY cr.cohort_month, cr.month_number;
+    r.cohort_month,
+    s.cohort_size,
+    r.month_diff AS month_number,
+    r.retained_customers,
+    ROUND((r.retained_customers * 100.0) / s.cohort_size, 2) || '%' AS retention_rate
+FROM cohort_retention r
+JOIN cohort_sizes s ON r.cohort_month = s.cohort_month
+WHERE r.month_diff <= 3
+ORDER BY r.cohort_month, r.month_diff;
 
--- 2. Identify Repeat vs One-time Customers and Active vs Churned
--- We define Churned as: last purchase was > 30 days from the maximum order date in the dataset
-WITH customer_orders_summary AS (
-    SELECT 
-        customer_id,
-        COUNT(order_id) AS total_orders,
-        MAX(order_date) AS last_order_date
-    FROM orders
-    WHERE status != 'cancelled'
-    GROUP BY customer_id
-),
-customer_activity AS (
-    SELECT 
-        c.customer_id,
-        c.name,
-        COALESCE(s.total_orders, 0) AS total_orders,
-        s.last_order_date,
-        CASE 
-            WHEN COALESCE(s.total_orders, 0) >= 2 THEN 'Repeat'
-            WHEN COALESCE(s.total_orders, 0) = 1 THEN 'One-time'
-            ELSE 'No-purchase'
-        END AS purchase_frequency,
-        CASE 
-            WHEN s.last_order_date IS NULL THEN 'Inactive'
-            WHEN CAST(julianday((SELECT MAX(order_date) FROM orders)) - julianday(s.last_order_date) AS INTEGER) > 30 THEN 'Churned'
-            ELSE 'Active'
-        END AS activity_status
-    FROM customers c
-    LEFT JOIN customer_orders_summary s ON c.customer_id = s.customer_id
-)
+-- 16. Self-Join with Window Function
+-- Find products frequently bought together in the same order
+-- Shows: product_a, product_b, times_bought_together (A-B and B-A appear once)
 SELECT 
-    purchase_frequency,
-    activity_status,
-    COUNT(*) AS customer_count,
-    ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM customers), 2) AS percentage
-FROM customer_activity
-GROUP BY purchase_frequency, activity_status
-ORDER BY customer_count DESC;
-
--- 3. RFM Analysis (Recency, Frequency, Monetary)
--- Scores from 1 to 3 (3 = Best, 1 = Worst)
-WITH customer_rfm_raw AS (
-    SELECT 
-        customer_id,
-        -- Days since last order compared to the latest order in database
-        CAST(julianday((SELECT MAX(order_date) FROM orders WHERE status != 'cancelled')) - julianday(MAX(order_date)) AS INTEGER) AS recency,
-        COUNT(order_id) AS frequency,
-        SUM(order_total) AS monetary
-    FROM orders
-    WHERE status != 'cancelled'
-    GROUP BY customer_id
-),
-rfm_tiles AS (
-    SELECT 
-        customer_id,
-        recency,
-        frequency,
-        monetary,
-        -- Recency: lower is better (ordered recently) -> order by recency desc for tiles (1 is highest days, 3 is lowest days)
-        NTILE(3) OVER (ORDER BY recency DESC) AS r_score,
-        -- Frequency: higher is better -> order by frequency asc (1 is lowest frequency, 3 is highest)
-        NTILE(3) OVER (ORDER BY frequency ASC) AS f_score,
-        -- Monetary: higher is better -> order by monetary asc (1 is lowest spend, 3 is highest)
-        NTILE(3) OVER (ORDER BY monetary ASC) AS m_score
-    FROM customer_rfm_raw
-)
-SELECT 
-    r.customer_id,
-    c.name AS customer_name,
-    r.recency AS recency_days,
-    r.frequency AS order_count,
-    ROUND(r.monetary, 2) AS total_spend,
-    (r.r_score || r.f_score || r.m_score) AS rfm_cell,
-    CASE 
-        WHEN r.r_score = 3 AND r.f_score = 3 AND r.m_score = 3 THEN 'Best Customers'
-        WHEN r.f_score = 3 THEN 'Loyal Customers'
-        WHEN r.m_score = 3 THEN 'Big Spenders'
-        WHEN r.r_score = 1 AND r.f_score = 1 THEN 'Lost Customers'
-        ELSE 'Normal Customers'
-    END AS rfm_segment
-FROM rfm_tiles r
-JOIN customers c ON r.customer_id = c.customer_id
-ORDER BY total_spend DESC
+    p1.product_name AS product_a,
+    p2.product_name AS product_b,
+    COUNT(*) AS times_bought_together
+FROM order_items oi1
+JOIN order_items oi2 
+    ON oi1.order_id = oi2.order_id 
+   AND oi1.product_id < oi2.product_id -- Excludes duplicates and matches with self
+JOIN products p1 ON oi1.product_id = p1.product_id
+JOIN products p2 ON oi2.product_id = p2.product_id
+GROUP BY p1.product_name, p2.product_name
+ORDER BY times_bought_together DESC, product_a, product_b
 LIMIT 20;

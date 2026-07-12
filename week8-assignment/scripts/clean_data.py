@@ -1,181 +1,219 @@
 import os
-import hashlib
-import json
 import sqlite3
 import pandas as pd
 import numpy as np
 
-def hash_pii(val):
+def parse_date(val):
     if pd.isna(val) or str(val).strip() == '':
-        return None
-    return hashlib.sha256(str(val).strip().encode('utf-8')).hexdigest()
+        return pd.NaT
+    val_str = str(val).strip()
+    # Try multiple formats
+    for fmt in ('%d-%m-%Y', '%Y-%m-%d %H:%M:%S', '%Y-%m-%d'):
+        try:
+            return pd.to_datetime(val_str, format=fmt)
+        except ValueError:
+            continue
+    # Fallback to general parsing
+    try:
+        return pd.to_datetime(val_str)
+    except:
+        return pd.NaT
+
+def clean_orders(df_orders):
+    report = {}
+    total_raw = len(df_orders)
+    
+    # 1. Handle NULL/empty customer_id
+    null_cust_mask = df_orders['customer_id'].isna() | (df_orders['customer_id'].astype(str).str.strip() == '')
+    null_cust_count = null_cust_mask.sum()
+    df_clean = df_orders[~null_cust_mask].copy()
+    
+    # 2. Fix date formats
+    raw_dates = df_clean['order_date'].copy()
+    parsed_dates = df_clean['order_date'].apply(parse_date)
+    df_clean['order_date'] = parsed_dates
+    
+    # Track how many dates were modified from non-standard format
+    # Simple check: if date string contains '-' and it's 10 chars (e.g. DD-MM-YYYY)
+    date_format_issues = raw_dates.astype(str).str.match(r'^\d{2}-\d{2}-\d{4}$')
+    format_issues_count = date_format_issues.sum()
+    
+    # 3. Handle future dates
+    now = pd.Timestamp.now()
+    future_date_mask = df_clean['order_date'] > now
+    future_date_count = future_date_mask.sum()
+    df_clean = df_clean[~future_date_mask & df_clean['order_date'].notna()]
+    
+    report['null_customer_ids_dropped'] = int(null_cust_count)
+    report['wrong_date_formats_fixed'] = int(format_issues_count)
+    report['future_dates_dropped'] = int(future_date_count)
+    report['total_orders_cleaned'] = len(df_clean)
+    
+    return df_clean, report
+
+def clean_products(df_products):
+    report = {}
+    total_raw = len(df_products)
+    
+    df_clean = df_products.copy()
+    # Normalize product names: trim spaces, title case
+    # Keep track of how many names were changed
+    original_names = df_clean['product_name'].astype(str)
+    df_clean['product_name'] = df_clean['product_name'].astype(str).str.strip().str.title()
+    changed_count = (original_names != df_clean['product_name']).sum()
+    
+    report['names_normalized'] = int(changed_count)
+    report['total_products_cleaned'] = len(df_clean)
+    
+    return df_clean, report
+
+def validate_emails(df_customers):
+    # Regex to check email validity (basic check for user@domain.extension)
+    email_pattern = r'^[^@]+@[^@]+\.[^@]+$'
+    invalid_mask = ~df_customers['email'].astype(str).str.match(email_pattern, na=False)
+    invalid_cust_ids = df_customers[invalid_mask]['customer_id'].tolist()
+    return invalid_cust_ids
+
+def check_referential_integrity(df_orders, df_order_items):
+    # Find order_items referencing non-existent orders
+    orphan_mask = ~df_order_items['order_id'].isin(df_orders['order_id'])
+    orphan_item_ids = df_order_items[orphan_mask]['item_id'].tolist()
+    return orphan_item_ids
 
 def clean_datasets():
-    print("Starting data cleaning pipeline...")
+    print("=" * 60)
+    print("STARTING E-COMMERCE ORDER ANALYTICS ETL PIPELINE")
+    print("=" * 60)
     
-    # 1. Load raw datasets
-    df_customers = pd.read_csv('data/raw/customers.csv')
-    df_products = pd.read_csv('data/raw/products.csv')
-    df_orders = pd.read_csv('data/raw/orders.csv')
-    df_order_items = pd.read_csv('data/raw/order_items.csv')
-
-    print(f"Loaded raw row counts:")
-    print(f"  Customers: {len(df_customers)}")
-    print(f"  Products: {len(df_products)}")
-    print(f"  Orders: {len(df_orders)}")
-    print(f"  Order Items: {len(df_order_items)}")
-
-    # --- 2. Clean Customers ---
-    print("\nCleaning Customers...")
-    # Deduplicate on primary key
-    df_customers = df_customers.drop_duplicates(subset=['customer_id'], keep='first')
+    # Load raw CSVs
+    raw_path = 'data/raw'
+    df_customers = pd.read_csv(os.path.join(raw_path, 'customers.csv'))
+    df_products = pd.read_csv(os.path.join(raw_path, 'products.csv'))
+    df_orders = pd.read_csv(os.path.join(raw_path, 'orders.csv'))
+    df_order_items = pd.read_csv(os.path.join(raw_path, 'order_items.csv'))
     
-    # Mask PII
-    df_customers['email'] = df_customers['email'].apply(hash_pii)
-    df_customers['phone'] = df_customers['phone'].apply(hash_pii)
-    
-    # Clean and validate registration dates
-    df_customers['registered_on'] = pd.to_datetime(df_customers['registered_on'], errors='coerce')
-    # Drop future dates
-    current_time = pd.Timestamp.now()
-    df_customers = df_customers[df_customers['registered_on'] <= current_time]
-    # Drop rows with null registration dates
-    df_customers = df_customers.dropna(subset=['registered_on'])
-    # Convert date back to string format
-    df_customers['registered_on'] = df_customers['registered_on'].dt.strftime('%Y-%m-%d')
-    
-    # Clean loyalty points: cap negative values to 0, fill nulls with 0
-    df_customers['loyalty_points'] = df_customers['loyalty_points'].apply(lambda x: max(0, x) if not pd.isna(x) else 0)
-    df_customers['loyalty_points'] = df_customers['loyalty_points'].astype(int)
-
-    # --- 3. Clean Products ---
+    # 1. Clean Products
     print("Cleaning Products...")
-    # Deduplicate on primary key
-    df_products = df_products.drop_duplicates(subset=['product_id'], keep='first')
-    # Filter out products with negative price
-    df_products = df_products[df_products['base_price'] >= 0]
-
-    # --- 4. Clean Orders ---
+    df_products_clean, prod_report = clean_products(df_products)
+    
+    # 2. Clean Customers
+    print("Cleaning Customers...")
+    df_customers_clean = df_customers.copy()
+    # Find invalid emails before cleaning them, if any
+    invalid_emails = validate_emails(df_customers_clean)
+    
+    # Normalize registration dates
+    df_customers_clean['registration_date'] = pd.to_datetime(df_customers_clean['registration_date'], errors='coerce')
+    df_customers_clean = df_customers_clean[df_customers_clean['registration_date'].notna()]
+    df_customers_clean['registration_date'] = df_customers_clean['registration_date'].dt.strftime('%Y-%m-%d')
+    
+    # 3. Clean Orders
     print("Cleaning Orders...")
-    # Deduplicate on primary key
-    df_orders = df_orders.drop_duplicates(subset=['order_id'], keep='first')
+    df_orders_clean, orders_report = clean_orders(df_orders)
     
-    # Parse dates
-    df_orders['order_date'] = pd.to_datetime(df_orders['order_date'], errors='coerce')
-    # Drop future or invalid dates
-    df_orders = df_orders[(df_orders['order_date'] <= current_time) & (df_orders['order_date'].notna())]
+    # Ensure customer_id exists in customers (Referential Integrity for Orders)
+    missing_cust_orders_mask = ~df_orders_clean['customer_id'].isin(df_customers_clean['customer_id'])
+    missing_cust_orders_count = missing_cust_orders_mask.sum()
+    df_orders_clean = df_orders_clean[~missing_cust_orders_mask]
     
-    # Validate and clean city
-    valid_cities = ['Delhi', 'Mumbai', 'Bengaluru']
-    # If city is missing/invalid, try to resolve using customer info
-    # To do this, merge with customers
-    df_orders = df_orders.merge(df_customers[['customer_id', 'city']], on='customer_id', suffixes=('', '_cust'), how='left')
-    df_orders['city'] = df_orders['city'].fillna(df_orders['city_cust'])
-    df_orders = df_orders[df_orders['city'].isin(valid_cities)]
-    df_orders = df_orders.drop(columns=['city_cust'])
-
-    # Validate customer_id exists in customers (referential integrity)
-    df_orders = df_orders[df_orders['customer_id'].isin(df_customers['customer_id'])]
+    # Format order_date as string
+    df_orders_clean['order_date'] = df_orders_clean['order_date'].dt.strftime('%Y-%m-%d %H:%M:%S')
     
-    # Convert dates back to string format
-    df_orders['order_date'] = df_orders['order_date'].dt.strftime('%Y-%m-%d %H:%M:%S')
-
-    # --- 5. Clean Order Items ---
+    # 4. Clean Order Items
     print("Cleaning Order Items...")
-    # Deduplicate on primary key
-    df_order_items = df_order_items.drop_duplicates(subset=['item_id'], keep='first')
+    df_order_items_clean = df_order_items.copy()
     
-    # Validate referential integrity (order_id and product_id must exist in cleaned tables)
-    df_order_items = df_order_items[df_order_items['order_id'].isin(df_orders['order_id'])]
-    df_order_items = df_order_items[df_order_items['product_id'].isin(df_products['product_id'])]
+    # Check referential integrity (orphaned items)
+    orphaned_items = check_referential_integrity(df_orders_clean, df_order_items_clean)
     
-    # Filter out negative quantities or prices
-    df_order_items = df_order_items[(df_order_items['qty'] > 0) & (df_order_items['unit_price'] >= 0)]
+    # Drop items that fail referential integrity (orders and products)
+    df_order_items_clean = df_order_items_clean[df_order_items_clean['order_id'].isin(df_orders_clean['order_id'])]
+    df_order_items_clean = df_order_items_clean[df_order_items_clean['product_id'].isin(df_products_clean['product_id'])]
     
-    # Clean discount: cap at [0, 100]
-    df_order_items['discount'] = df_order_items['discount'].apply(lambda x: x if 0 <= x <= 100 else 0)
+    # Handle zero quantity
+    zero_qty_mask = df_order_items_clean['quantity'] == 0
+    zero_qty_count = zero_qty_mask.sum()
+    df_order_items_clean = df_order_items_clean[~zero_qty_mask]
     
-    # Compute derived column net_price
-    df_order_items['net_price'] = df_order_items['qty'] * df_order_items['unit_price'] * (1 - df_order_items['discount'] / 100.0)
-    df_order_items['net_price'] = df_order_items['net_price'].round(2)
+    # Handle invalid discounts (cap or reset to 0)
+    invalid_discount_mask = (df_order_items_clean['discount_percent'] < 0) | (df_order_items_clean['discount_percent'] > 100)
+    invalid_discount_count = invalid_discount_mask.sum()
+    df_order_items_clean.loc[invalid_discount_mask, 'discount_percent'] = 0.0
     
-    # Compute discount amount
-    df_order_items['discount_amount'] = (df_order_items['qty'] * df_order_items['unit_price'] * (df_order_items['discount'] / 100.0)).round(2)
-
-    # --- 6. Recalculate Order Totals ---
-    print("Recalculating Order Totals...")
-    order_totals = df_order_items.groupby('order_id').agg(
-        order_total=('net_price', 'sum'),
-        total_discount=('discount_amount', 'sum')
-    ).reset_index()
+    # Save Cleaned CSVs
+    clean_path = 'data/cleaned'
+    os.makedirs(clean_path, exist_ok=True)
     
-    # Drop temporary discount_amount from order_items
-    df_order_items = df_order_items.drop(columns=['discount_amount'])
+    df_customers_clean.to_csv(os.path.join(clean_path, 'customers_clean.csv'), index=False)
+    df_products_clean.to_csv(os.path.join(clean_path, 'products_clean.csv'), index=False)
+    df_orders_clean.to_csv(os.path.join(clean_path, 'orders_clean.csv'), index=False)
+    df_order_items_clean.to_csv(os.path.join(clean_path, 'order_items_clean.csv'), index=False)
     
-    # Update orders table with calculated totals
-    df_orders = df_orders.merge(order_totals, on='order_id', how='left')
-    df_orders['order_total'] = df_orders['order_total'].fillna(0.0).round(2)
-    df_orders['total_discount'] = df_orders['total_discount'].fillna(0.0).round(2)
-
-    # --- 7. Save Cleaned CSVs ---
-    print("\nExporting cleaned datasets to data/cleaned/...")
-    os.makedirs('data/cleaned', exist_ok=True)
+    # Print Detailed Execution Report
+    print("\n" + "=" * 60)
+    print("DATA PIPELINE ANOMALIES & CLEANING REPORT")
+    print("=" * 60)
+    print(f"Products normalization:")
+    print(f"  - Names formatted/trimmed: {prod_report['names_normalized']}")
+    print(f"  - Total products output:   {prod_report['total_products_cleaned']}")
+    print(f"Customers email validation:")
+    print(f"  - Customers with invalid emails: {len(invalid_emails)} (IDs: {invalid_emails})")
+    print(f"Orders cleaning:")
+    print(f"  - Null customer ID orders dropped: {orders_report['null_customer_ids_dropped']}")
+    print(f"  - Wrong date formats corrected:    {orders_report['wrong_date_formats_fixed']}")
+    print(f"  - Future date orders dropped:      {orders_report['future_dates_dropped']}")
+    print(f"  - Orders with missing customer FK dropped: {missing_cust_orders_count}")
+    print(f"  - Total orders output:             {orders_report['total_orders_cleaned'] - missing_cust_orders_count}")
+    print(f"Order Items referential integrity:")
+    print(f"  - Orphaned items (no order ID): {len(orphaned_items)} (dropped)")
+    print(f"  - Zero quantity items dropped:  {zero_qty_count}")
+    print(f"  - Invalid discounts reset to 0: {invalid_discount_count}")
+    print(f"  - Total items output:           {len(df_order_items_clean)}")
+    print("=" * 60)
     
-    df_customers.to_csv('data/cleaned/customers_clean.csv', index=False)
-    df_products.to_csv('data/cleaned/products_clean.csv', index=False)
-    df_orders.to_csv('data/cleaned/orders_clean.csv', index=False)
-    df_order_items.to_csv('data/cleaned/order_items_clean.csv', index=False)
-    
-    print("Cleaned CSV exports complete.")
-    print(f"Cleaned row counts:")
-    print(f"  Customers: {len(df_customers)}")
-    print(f"  Products: {len(df_products)}")
-    print(f"  Orders: {len(df_orders)}")
-    print(f"  Order Items: {len(df_order_items)}")
-
-    # --- 8. Load into SQLite Database ---
-    print("\nLoading cleaned data into SQLite database (freshmart.db)...")
+    # 5. Load into SQLite database
     db_path = 'freshmart.db'
-    
-    # Remove existing database if it exists to ensure a clean load
     if os.path.exists(db_path):
         os.remove(db_path)
         
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     
-    # Execute schema.sql DDL
+    # Enable foreign keys
+    conn.execute("PRAGMA foreign_keys = ON;")
+    
+    # Read and run schema DDL
     with open('sql/schema.sql', 'r') as f:
-        schema_ddl = f.read()
-    cursor.executescript(schema_ddl)
+        schema_sql = f.read()
+    cursor.executescript(schema_sql)
     conn.commit()
     
-    # Load pandas DataFrames into SQLite tables
-    df_customers.to_sql('customers', conn, if_exists='append', index=False)
-    df_products.to_sql('products', conn, if_exists='append', index=False)
-    df_orders.to_sql('orders', conn, if_exists='append', index=False)
-    df_order_items.to_sql('order_items', conn, if_exists='append', index=False)
+    # Load dataframes into sqlite tables
+    # Note: SQLite check constraints and FK constraints will be validated on insert
+    df_customers_clean.to_sql('customers', conn, if_exists='append', index=False)
+    df_products_clean.to_sql('products', conn, if_exists='append', index=False)
+    df_orders_clean.to_sql('orders', conn, if_exists='append', index=False)
+    df_order_items_clean.to_sql('order_items', conn, if_exists='append', index=False)
     
-    # Verify row counts in SQL
-    print("\nVerifying database row counts:")
-    tables = ['customers', 'products', 'orders', 'order_items']
-    for table in tables:
-        cursor.execute(f"SELECT COUNT(*) FROM {table}")
-        count = cursor.fetchone()[0]
-        print(f"  Table '{table}' has {count} rows.")
+    print("\nLoading cleaned data into SQLite database complete.")
+    
+    # Verification in SQL
+    print("\nDatabase Table Verification:")
+    for tbl in ['customers', 'products', 'orders', 'order_items']:
+        cursor.execute(f"SELECT COUNT(*) FROM {tbl}")
+        cnt = cursor.fetchone()[0]
+        print(f"  - Table '{tbl}' has {cnt} rows.")
         
-    # Verify referential integrity constraints
     cursor.execute("PRAGMA foreign_key_check")
     violations = cursor.fetchall()
     if violations:
-        print("WARNING: Foreign key violations detected!")
-        for violation in violations:
-            print(violation)
+        print("WARNING: Foreign key violations detected in database!")
+        for v in violations:
+            print(f"  Violation: {v}")
     else:
-        print("Foreign key check passed! Referential integrity is fully validated.")
+        print("Foreign key check passed! Referential integrity is fully intact.")
         
     conn.close()
-    print("Database loading complete. freshmart.db is ready.")
 
 if __name__ == '__main__':
     clean_datasets()
