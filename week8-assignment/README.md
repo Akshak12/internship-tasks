@@ -6,10 +6,10 @@ A Python + SQLite data pipeline that generates messy e-commerce data, cleans it,
 
 ## What it does
 
-1. **Generates** raw order data with intentional issues — duplicates, missing IDs, negative prices, future dates, invalid discounts.
-2. **Cleans** the data using Pandas — removes bad records, masks PII, fixes referential integrity.
+1. **Generates** raw order data with intentional issues : duplicates, missing IDs, negative prices, future dates, invalid discounts.
+2. **Cleans** the data using Pandas : removes bad records, masks PII, fixes referential integrity.
 3. **Loads** the cleaned data into a local SQLite database (`freshmart.db`).
-4. **Analyzes** it using SQL — aggregations, window functions, cohort retention, RFM segmentation.
+4. **Analyzes** it using SQL : aggregations, window functions, cohort retention, RFM segmentation.
 5. **Reports** via a CLI tool that prints business summaries and saves charts.
 6. **Tests** 4 edge cases to confirm the cleaning logic works as expected.
 
