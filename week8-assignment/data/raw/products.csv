@@ -1,0 +1,28 @@
+product_id,product_name,category,base_price
+PRD-101,Amul Butter 500g,Dairy,55.0
+PRD-102,Mother Dairy Milk 1L,Dairy,66.0
+PRD-103,Paneer 200g,Dairy,85.0
+PRD-104,Greek Yogurt 150g,Dairy,50.0
+PRD-105,Amul Cheese Slices 200g,Dairy,120.0
+PRD-106,Whole Wheat Bread,Bakery,45.0
+PRD-107,White Bread,Bakery,35.0
+PRD-108,Croissant,Bakery,60.0
+PRD-109,Chocolate Muffin,Bakery,40.0
+PRD-110,Garlic Bread,Bakery,80.0
+PRD-111,Coca Cola 2L,Beverages,99.0
+PRD-112,Tropicana Orange 1L,Beverages,99.0
+PRD-113,Nescafé Classic 100g,Beverages,299.0
+PRD-114,Red Label Tea 250g,Beverages,140.0
+PRD-115,Pepsi 750ml,Beverages,45.0
+PRD-116,Organic Bananas 1kg,Produce,60.0
+PRD-117,Washington Apples 1kg,Produce,220.0
+PRD-118,Onions 5kg,Produce,180.0
+PRD-119,Potatoes 5kg,Produce,150.0
+PRD-120,Tomatoes 1kg,Produce,40.0
+PRD-121,Lays Potato Chips,Snacks,20.0
+PRD-122,Oreo Biscuits,Snacks,30.0
+PRD-123,Kurkure Masala Munch,Snacks,20.0
+PRD-124,Haldiram Bhujia 150g,Snacks,55.0
+PRD-125,Cadbury Dairy Milk 100g,Snacks,100.0
+PRD-999,Expired Milk (Promo),Dairy,-20.0
+PRD-998,Damaged Muffin,Bakery,-5.0
